@@ -78,7 +78,7 @@
 
         <v-main>
           <v-container class="fill-height">
-            <router-view />
+            <router-view v-if="$auth" />
           </v-container>
         </v-main>
       </v-app>

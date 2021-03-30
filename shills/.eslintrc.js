@@ -9,7 +9,8 @@ module.exports = {
     SharedArrayBuffer: "readonly",
   },
   parserOptions: {
-    ecmaVersion: 2018,
+    parser: "babel-eslint",
+    ecmaVersion: 2020,
     sourceType: "module",
     allowImportExportEverywhere: true
   },
@@ -17,5 +18,6 @@ module.exports = {
   rules: {
       "linebreak-style": "off",
       "no-debugger": "off",
+      "max-len": "off",
   },
 };
