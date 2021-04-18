@@ -1,20 +1,61 @@
 <template>
   <div class="shills-list">
-    <v-container grid-list-md text-xs-center>
-      <v-layout row wrap>
-        <shill-card v-for="shill in sortedShillsList" v-bind:key="shill.id" class="ma-5" :isAuthenticated="isAuthenticated"
-        :maxWidth="400"
-        :likes="shill.likes" :reads="shill.likes"
-        :name="shill.name"
-        :description="shill.description"
-        :link="shill.link"
-        :linkText="shill.linktext"
-        :hours="shill.hours"
-        :amount="shill.amount"
-        :images="[shill.image]"
-        :tags="['Rational', 'Meme']"/>
-      </v-layout>
-    </v-container>
+    <v-row class="filters pa-2">
+      <v-col cols="4">
+        <v-autocomplete
+          v-model="includedTags"
+          :items="allTags"
+          outlined
+          dense
+          chips
+          small-chips
+          deletable-chips
+          label="Show only"
+          multiple
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="4">
+        <v-autocomplete
+          v-model="excludedTags"
+          :items="allTags"
+          outlined
+          dense
+          chips
+          small-chips
+          deletable-chips
+          label="Exclude"
+          multiple
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="4">
+         <v-select
+          v-model="sortedBy"
+          :items="sortings"
+          label="Sort by"
+          outlined
+          dense
+        ></v-select>
+      </v-col>
+    </v-row>
+    <div class="shills">
+    <v-layout row wrap>
+      <shill-card v-for="shill in filteredShills" v-bind:key="shill.id" class="ma-5 mx-5" :isAuthenticated="isAuthenticated"
+      :maxWidth="375"
+      :id="shill.id"
+      :likes="shill.likes" :reads="shill.likes"
+      :name="shill.name"
+      :shortName="shill.shortname"
+      :author="shill.author"
+      :description="shill.description"
+      :link="shill.link"
+      :linkText="shill.linktext"
+      :hours="shill.hours"
+      :amount="shill.amount"
+      :images="shill.image"
+      :tags="shill.tags"
+      @tag="onTag"/>
+    </v-layout>
+    </div>
   </div>
 </template>
 
@@ -36,25 +77,61 @@ export default {
     },
     sortedShillsList() {
       if (this.shills === []) return [];
-      return [...this.shills].sort((a, b) => b.likes - a.likes);
+      switch (this.sortedBy) {
+        case 'Likes':
+          return [...this.shills].sort((a, b) => b.likes - a.likes);
+        case 'Alphabetical':
+          return [...this.shills].sort((a, b) => a.name.localeCompare(b.name));
+        case 'Time investment':
+          return [...this.shills].sort((a, b) => b.hours - a.hours);
+        case 'Recommended':
+        default:
+          return this.shills;
+      }
+    },
+    filteredShills() {
+      return this.sortedShillsList.filter(
+        (shill) => this.includedTags.every((selTag) => shill.tags.split(',').includes(selTag))
+          && !this.excludedTags.some((selTag) => shill.tags.split(',').includes(selTag)),
+      );
+    },
+    allTags() {
+      const allTags = new Set();
+      if (this.shills === []) return [];
+      this.shills.forEach((shill) => shill.tags.split(',').forEach((tag) => allTags.add(tag)));
+      return Array.from(allTags);
+    },
+  },
+  methods: {
+    onTag(tag) {
+      this.includedTags = [tag];
+      this.excludedTags = [];
     },
   },
   async created() {
-    this.shills = await api.requestShillsList({ auth: this.$auth, type: this.type });
+    const promises = await Promise.all([
+      await api.requestShillsList({ auth: this.$auth, type: this.type }),
+      await api.requestReaders({ auth: this.$auth }),
+      await api.requestProgress({ auth: this.$auth }),
+    ]);
+    const works = promises[0];
+    const readers = promises[1];
+    const progress = promises[2];
+    readers.forEach((reader) => {
+      // eslint-disable-next-line no-param-reassign
+      reader.progresses = progress.filter((el) => el.readerid === reader.id);
+    });
+    this.readers = readers;
+    this.shills = works;
+    this.progress = progress;
   },
   data() {
     return {
       shills: [],
-      images: [
-        'https://i.imgur.com/ig2HPNi.jpg',
-        'https://i.imgur.com/hEXhxy6.jpg',
-        'https://i.imgur.com/9DRgUJF.jpg',
-      ],
-      tags: [
-        'Rational',
-        'Horror',
-        'Fat Husky',
-      ],
+      includedTags: ['Main'],
+      excludedTags: ['Flawed'],
+      sortings: ['Likes', 'Recommended', 'Alphabetical', 'Time investment'],
+      sortedBy: 'Likes',
     };
   },
 };

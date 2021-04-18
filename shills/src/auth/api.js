@@ -15,6 +15,24 @@ const api = {
     const { data } = await axios.get('https://recordcrash.com:3141/works');
     return data;
   },
+
+  async requestReaders() {
+    const { data } = await axios.get('https://recordcrash.com:3141/readers');
+    return data;
+  },
+  async requestProgress() {
+    const { data } = await axios.get('https://recordcrash.com:3141/progress');
+    return data;
+  },
+
+  async likeWork(id, readername) {
+    const { data } = await axios.post(`https://recordcrash.com:3141/works/like/${id}/${readername}`);
+    return data;
+  },
+  async readWork(id, readername) {
+    const { data } = await axios.post(`https://recordcrash.com:3141/works/read/${id}/${readername}`);
+    return data;
+  },
 };
 
 export default api;

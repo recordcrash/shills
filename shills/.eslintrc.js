@@ -19,5 +19,7 @@ module.exports = {
       "linebreak-style": "off",
       "no-debugger": "off",
       "max-len": "off",
+      "no-param-reassign": "off",
+      "no-shadow": "off",
   },
 };
