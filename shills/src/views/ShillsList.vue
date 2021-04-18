@@ -53,6 +53,8 @@
       :amount="shill.amount"
       :images="shill.image"
       :tags="shill.tags"
+      :read="isRead(shill.id)"
+      :liked="isLiked(shill.id)"
       @tag="onTag"/>
     </v-layout>
     </div>
@@ -103,6 +105,12 @@ export default {
     },
   },
   methods: {
+    isRead(id) {
+      return !!this.reads.find((el) => el.readername === this.$auth?.user?.name && el.work === id);
+    },
+    isLiked(id) {
+      return !!this.likes.find((el) => el.readername === this.$auth?.user?.name && el.work === id);
+    },
     onTag(tag) {
       this.includedTags = [tag];
       this.excludedTags = [];
@@ -112,26 +120,28 @@ export default {
     const promises = await Promise.all([
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
       await api.requestReaders({ auth: this.$auth }),
-      await api.requestProgress({ auth: this.$auth }),
+      await api.requestAllWorksRead(),
+      await api.requestAllWorksLiked(),
     ]);
     const works = promises[0];
     const readers = promises[1];
-    const progress = promises[2];
-    readers.forEach((reader) => {
-      // eslint-disable-next-line no-param-reassign
-      reader.progresses = progress.filter((el) => el.readerid === reader.id);
-    });
+    const reads = promises[2];
+    const likes = promises[3];
     this.readers = readers;
     this.shills = works;
-    this.progress = progress;
+    this.reads = reads;
+    this.likes = likes;
   },
   data() {
     return {
+      readers: [],
       shills: [],
+      reads: [],
+      likes: [],
       includedTags: ['Main'],
       excludedTags: ['Flawed'],
       sortings: ['Likes', 'Recommended', 'Alphabetical', 'Time investment'],
-      sortedBy: 'Likes',
+      sortedBy: 'Recommended',
     };
   },
 };

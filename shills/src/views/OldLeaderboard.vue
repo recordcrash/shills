@@ -11,11 +11,6 @@
     mobile-breakpoint="0"
     class="elevation-1"
   >
-  <template v-slot:[`item.name`]="{ item }">
-        <router-link :to="'profile/'+item.name">
-          {{ item.name }}
-        </router-link>
-  </template>
   <template v-slot:[`item.count`]="{ item }">
       <v-chip
         :color="getColor(item.count)"
@@ -32,7 +27,7 @@
 import api from '../auth/api';
 
 export default {
-  name: 'Leaderboard',
+  name: 'OldLeaderboard',
   computed: {
     isAuthenticated() {
       return this.$auth.isAuthenticated;
@@ -44,12 +39,31 @@ export default {
   async created() {
     const promises = await Promise.all([
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
-      await api.requestAllWorksRead(),
+      await api.requestReaders({ auth: this.$auth }),
+      await api.requestProgress({ auth: this.$auth }),
     ]);
     const works = promises[0];
-    const reads = promises[1];
-    const elements = this.getElementsByReadsArray(works, reads);
+    const readers = promises[1];
+    const progress = promises[2];
+    readers.forEach((reader) => {
+      reader.progresses = progress.filter((el) => el.readerid === reader.id).map((el) => el.workid);
+    });
+    const elements = [];
 
+    readers.forEach((reader) => {
+      const element = {};
+      element.name = reader.name;
+      works.forEach((el) => { element[el.id.toString()] = reader.progresses.find((workId) => workId === el.id) ? 'YES' : 'NO'; });
+      element.count = reader.progresses.length;
+      const initialHours = 0;
+      const hoursReducer = (acc, item) => (reader.progresses.find((workId) => workId === item.id) ? acc + Number.parseInt(item.hours, 10) : acc + 0);
+      element.hours = works.reduce(hoursReducer, initialHours);
+      elements.push(element);
+    });
+    this.readers = readers;
+    this.shills = works;
+    this.progress = progress;
+    this.elements = elements;
     const headers = [{
       text: 'Shill Reader',
       align: 'start',
@@ -71,37 +85,13 @@ export default {
       });
     });
     this.headers = headers;
-    this.reads = reads;
-    this.works = works;
-    this.elements = elements;
   },
   methods:
   {
-    getElementsByReadsArray(works, reads) {
-      const elements = [];
-      reads.forEach((read) => {
-        const foundWork = works.find((el) => el.id === read.work);
-        // if we need to initialize a new reader row
-        const foundElement = elements.find((el) => el.name === read.readername);
-        if (!foundElement) {
-          const element = {};
-          element.name = read.readername;
-          works.forEach((work) => { (element[work.id.toString()] = 'NO'); });
-          element[read.work.toString()] = 'YES';
-          element.hours = foundWork.hours;
-          element.count = 1;
-          elements.push(element);
-        } else { // Otherwise we find the existing element
-          foundElement[read.work.toString()] = 'YES';
-          foundElement.hours += foundWork.hours;
-          foundElement.count += 1;
-        }
-      });
-      return elements;
-    },
     getColor(number) {
       return this.makeColor(number * (number / 518));
     },
+
     makeColor(value) {
       // value must be between [0, 510]
       value = Math.min(Math.max(0, value), 1) * 510;
@@ -129,10 +119,11 @@ export default {
   },
   data() {
     return {
+      readers: [],
       works: [],
-      headers: [],
-      reads: [],
+      progress: [],
       elements: [],
+      headers: [],
     };
   },
 };

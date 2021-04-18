@@ -1,13 +1,119 @@
 <template>
+<v-container>
   <div>
     <div>
-      <img :src="$auth.user.picture">
-      <h2>{{ $auth.user.name }}</h2>
-      <p>{{ $auth.user.email }}</p>
-    </div>
-
-    <div>
-      <pre>{{ JSON.stringify($auth.user, null, 2) }}</pre>
+      <h2>{{ username }}</h2>
+        <p><b>Completion count</b>: {{ worksReadString }}
+        <p><b>Hours read</b>: {{ hoursLeftString }}
+        <p><b>Medals</b>:</p>
+        <p><ul>
+          <li v-for="medal in medals" :key="medal.name">
+            <img :src="medal.link" :alt="medal.description"/> {{medal.name}}
+          </li>
+          </ul>
+        </p>
+        <v-row>
+        <v-col><b>Shills read</b>:
+        <ul>
+          <li v-for="read in reads" :key="read.name">
+            <a :href="read.link">
+               {{read.name}}
+            </a>
+          </li>
+        </ul>
+        </v-col>
+        <v-col><b>Shills liked</b>:
+        <ul>
+          <li v-for="like in likes" :key="like.name">
+            <a :href="like.link">
+              {{like.name}}
+            </a>
+          </li>
+        </ul>
+        </v-col>
+        </v-row>
     </div>
   </div>
+</v-container>
 </template>
+
+<script>
+import api from '../auth/api';
+
+export default {
+  name: 'Profile',
+  computed: {
+    worksReadString() {
+      return `${this.numberRead}/${this.totalWorks}`;
+    },
+    worksLikedString() {
+      return `${this.numberLiked}/${this.totalWorks}`;
+    },
+    hoursLeftString() {
+      return `${this.hoursRead}/${this.totalHours}`;
+    },
+    numberRead() {
+      return this.reads.length;
+    },
+    hoursRead() {
+      return this.reads.reduce((prev, cur) => prev + cur.hours, 0);
+    },
+    numberLiked() {
+      return this.reads.length;
+    },
+    totalWorks() {
+      return this.works.length;
+    },
+    totalHours() {
+      return this.works.reduce((prev, cur) => prev + cur.hours, 0);
+    },
+    medals() {
+      const medals = [];
+      const goldMedal = { name: 'Gold Medal', link: 'https://recordcrash.com/images/gold.png', description: 'A medal granted to those who finish the main shills list' };
+      const silverMedal = { name: 'Silver Medal', link: 'https://recordcrash.com/images/silver.png', description: 'A medal granted to those who finish over ten shills' };
+      const gameMedal = { name: 'Game Medal', link: 'https://recordcrash.com/images/game.png', description: 'A medal granted to those who finish all the games in the shills list' };
+      const tvMedal = { name: 'Video Medal', link: 'https://recordcrash.com/images/tv.png', description: 'A medal granted to those who finish all the video shills' };
+      const bookMedal = { name: 'Book Medal', link: 'https://recordcrash.com/images/book.png', description: 'A medal granted to those who finish the additional shills' };
+      const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+      const gameMedalArray = [30, 31, 32];
+      const tvMedalArray = [33, 34];
+      const bookMedalArray = [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36];
+      const localReads = this.readInts;
+      if (goldMedalArray.every((el) => localReads.includes(el))) medals.push(goldMedal);
+      if (localReads.length > 10) medals.push(silverMedal);
+      if (gameMedalArray.every((el) => localReads.includes(el))) medals.push(gameMedal);
+      if (tvMedalArray.every((el) => localReads.includes(el))) medals.push(tvMedal);
+      if (bookMedalArray.every((el) => localReads.includes(el))) medals.push(bookMedal);
+      return medals;
+    },
+  },
+  async created() {
+    this.username = this.$route.params.username || this.$auth.user.name;
+    const promises = await Promise.all([
+      await api.requestShillsList(),
+      await api.requestAllWorksRead(),
+      await api.requestAllWorksLiked(),
+    ]);
+    const works = promises[0];
+    let readInts = promises[1];
+    let likeInts = promises[2];
+    readInts = readInts.filter((read) => read.readername === this.username).map((el) => el.work);
+    likeInts = likeInts.filter((like) => like.readername === this.username).map((el) => el.work);
+    this.works = works;
+    this.reads = works.filter((work) => readInts.includes(work.id)).map((work) => ({ name: work.name, link: work.link, hours: work.hours }));
+    this.likes = works.filter((work) => likeInts.includes(work.id)).map((work) => ({ name: work.name, link: work.link, hours: work.hours }));
+    this.readInts = readInts;
+    this.likeInts = likeInts;
+  },
+  data() {
+    return {
+      works: [],
+      reads: [],
+      likes: [],
+      readInts: [],
+      likeInts: [],
+      username: '',
+    };
+  },
+};
+</script>

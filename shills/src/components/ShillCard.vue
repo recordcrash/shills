@@ -38,7 +38,7 @@
             <template v-slot:activator="{ on, attrs }">
               <div v-bind="attrs" v-on="on">
               <v-icon class="mr-1" v-if="!isAuthenticated" @click="onLike(id)"> mdi-heart-outline </v-icon>
-              <v-icon class="mr-1" v-else-if="isAuthenticated && !liked" @click="onLike(id)"> mdi-heart-outline </v-icon>
+              <v-icon class="mr-1" v-else-if="isAuthenticated && !(liked || localLiked)" @click="onLike(id)"> mdi-heart-outline </v-icon>
               <v-icon class="mr-1" v-else @click="onLike(id)"> mdi-heart </v-icon>
               <span  class="subheading mr-2">{{localLikes}}</span>
               </div>
@@ -50,7 +50,7 @@
             <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs" v-on="on">
             <v-icon class="mr-1" v-if="!isAuthenticated" @click="onRead(id)"> mdi-flag-outline </v-icon>
-            <v-icon class="mr-1" v-else-if="isAuthenticated && !read" @click="onRead(id)"> mdi-flag-outline </v-icon>
+            <v-icon class="mr-1" v-else-if="isAuthenticated && !(read || localRead)" @click="onRead(id)"> mdi-flag-outline </v-icon>
             <v-icon class="mr-1" v-else @click="onRead(id)"> mdi-flag </v-icon>
             <span v-bind="attrs" v-on="on" class="subheading mr-2">{{localReads}}</span>
             </div>
@@ -97,6 +97,8 @@ export default {
     images: String,
     maxWidth: Number,
     minWidth: Number,
+    read: Boolean,
+    liked: Boolean,
   },
   methods: {
     onClickTag(tag) {
@@ -104,7 +106,7 @@ export default {
     },
     async onLike(id) {
       if (!this.isAuthenticated) this.$auth.loginWithRedirect();
-      else {
+      else if (!this.localLiked && !this.liked) {
         try {
           const readername = this?.$auth?.user?.name;
           if (readername) {
@@ -112,14 +114,14 @@ export default {
           }
         } finally {
           this.localLikes = this.liked ? this.localLikes - 1 : this.localLikes + 1;
-          this.liked = !this.liked;
+          this.localLiked = true;
           document.activeElement.blur();
         }
       }
     },
     async onRead(id) {
       if (!this.isAuthenticated) this.$auth.loginWithRedirect();
-      else {
+      else if (!this.localRead && !this.read) {
         try {
           const readername = this?.$auth?.user?.name;
           if (readername) {
@@ -127,7 +129,7 @@ export default {
           }
         } finally {
           this.localReads = this.read ? this.localReads - 1 : this.localReads + 1;
-          this.read = !this.read;
+          this.localRead = true;
           document.activeElement.blur();
         }
       }
@@ -165,13 +167,15 @@ export default {
   created() {
     this.localLikes = this.likes;
     this.localReads = this.reads;
+    this.localLiked = this.liked;
+    this.localRead = this.read;
   },
   data() {
     return {
       localLikes: 0,
       localReads: 0,
-      liked: false,
-      read: false,
+      localLiked: false,
+      localRead: false,
       colors: [
         'green',
         'secondary',

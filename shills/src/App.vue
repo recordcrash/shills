@@ -77,8 +77,9 @@ export default {
   data: () => ({
     drawer: null,
     items: [
-      { icon: 'mdi-book', text: 'Main Shills', to: '/' },
+      { icon: 'mdi-book', text: 'Recommendations', to: '/' },
       { icon: 'mdi-trending-up', text: 'Leaderboards', to: '/leaderboard' },
+      { icon: 'mdi-trending-up', text: 'Old Leaderboards', to: '/oldleaderboard' },
     ],
   }),
 };

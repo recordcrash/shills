@@ -25,6 +25,14 @@ const api = {
     return data;
   },
 
+  async requestAllWorksRead() {
+    const { data } = await axios.get('https://recordcrash.com:3141/works/worksread/1');
+    return data;
+  },
+  async requestAllWorksLiked() {
+    const { data } = await axios.get('https://recordcrash.com:3141/works/worksliked/1');
+    return data;
+  },
   async likeWork(id, readername) {
     const { data } = await axios.post(`https://recordcrash.com:3141/works/like/${id}/${readername}`);
     return data;
