@@ -176,21 +176,6 @@ export default {
       localReads: 0,
       localLiked: false,
       localRead: false,
-      colors: [
-        'green',
-        'secondary',
-        'yellow darken-4',
-        'red lighten-2',
-        'orange darken-1',
-      ],
-      cycle: true,
-      slides: [
-        'First',
-        'Second',
-        'Third',
-        'Fourth',
-        'Fifth',
-      ],
     };
   },
 };

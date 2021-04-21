@@ -8,12 +8,12 @@
         <p><b>Medals</b>:</p>
         <p><ul>
           <li v-for="medal in medals" :key="medal.name">
-            <img :src="medal.link" :alt="medal.description"/> {{medal.name}}
+            <img :src="medal.link" :title="medal.description"/> {{medal.name}}
           </li>
           </ul>
         </p>
         <v-row>
-        <v-col><b>Shills read</b>:
+        <v-col><b>Shills finished</b>:
         <ul>
           <li v-for="read in reads" :key="read.name">
             <a :href="read.link">

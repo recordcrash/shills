@@ -2,7 +2,7 @@
   <div id="app">
     <v-app id="inspire">
       <v-app id="inspire">
-        <v-navigation-drawer v-model="drawer" app clipped>
+        <v-navigation-drawer v-model="drawer" app clipped style="z-index: 999 !important;">
           <v-list dense>
             <v-list-item v-for="item in items" :key="item.text" :to="item.to">
               <v-list-item-action>
@@ -78,8 +78,9 @@ export default {
     drawer: null,
     items: [
       { icon: 'mdi-book', text: 'Recommendations', to: '/' },
-      { icon: 'mdi-trending-up', text: 'Leaderboards', to: '/leaderboard' },
-      { icon: 'mdi-trending-up', text: 'Old Leaderboards', to: '/oldleaderboard' },
+      { icon: 'mdi-trending-up', text: 'Leaderboard', to: '/leaderboard' },
+      { icon: 'mdi-trending-up', text: 'Old Leaderboard', to: '/oldleaderboard' },
+      { icon: 'mdi-trending-up', text: 'Old List', to: '/oldlist' },
     ],
   }),
 };

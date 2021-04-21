@@ -42,7 +42,7 @@
       <shill-card v-for="shill in filteredShills" v-bind:key="shill.id" class="ma-5 mx-5" :isAuthenticated="isAuthenticated"
       :maxWidth="375"
       :id="shill.id"
-      :likes="shill.likes" :reads="shill.likes"
+      :likes="shill.likes" :reads="shill.readers"
       :name="shill.name"
       :shortName="shill.shortname"
       :author="shill.author"
@@ -82,6 +82,8 @@ export default {
       switch (this.sortedBy) {
         case 'Likes':
           return [...this.shills].sort((a, b) => b.likes - a.likes);
+        case 'Readers':
+          return [...this.shills].sort((a, b) => b.readers - a.readers);
         case 'Alphabetical':
           return [...this.shills].sort((a, b) => a.name.localeCompare(b.name));
         case 'Time investment':
@@ -138,9 +140,9 @@ export default {
       shills: [],
       reads: [],
       likes: [],
-      includedTags: ['Main'],
+      includedTags: [],
       excludedTags: ['Flawed'],
-      sortings: ['Likes', 'Recommended', 'Alphabetical', 'Time investment'],
+      sortings: ['Recommended', 'Likes', 'Readers', 'Alphabetical', 'Time investment'],
       sortedBy: 'Recommended',
     };
   },

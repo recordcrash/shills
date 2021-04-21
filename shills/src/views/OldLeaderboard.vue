@@ -71,7 +71,7 @@ export default {
       value: 'name',
     },
     {
-      text: 'Shills read',
+      text: 'Shills finished',
       value: 'count',
     },
     {
@@ -129,19 +129,19 @@ export default {
 };
 </script>
 <style>
+  /* GOD LOOK AT THIS CODE, IT'S TOTALLY NOT A HUGE EMBARASSING HACK*/
   table > tbody > tr > td:nth-child(1),
   table > thead > tr > th:nth-child(1) {
     position: sticky !important;
     position: -webkit-sticky !important;
     left: 0;
-    z-index: 9997;
+    z-index: 1;
     background: #1e1e1e;
   }
   table > thead > tr > th {
-    z-index: 9998 !important;
+    z-index: 2 !important;
   }
-  /* GOD LOOK AT THIS CODE, IT'S TOTALLY NOT A HUGE EMBARASSING HACK*/
   table > thead > tr > th:nth-child(1) {
-    z-index: 9999 !important;
+    z-index: 3 !important;
   }
 </style>

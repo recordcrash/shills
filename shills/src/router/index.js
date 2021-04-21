@@ -30,6 +30,11 @@ const routes = [
     component: Profile,
     beforeEnter: authGuard,
   },
+  {
+    path: '/oldlist',
+    // eslint-disable-next-line no-restricted-globals
+    beforeEnter() { window.open('https://recordcrash.com/shills.html'); },
+  },
 ];
 
 const router = new VueRouter({
