@@ -12,9 +12,10 @@
     class="elevation-1"
   >
   <template v-slot:[`item.name`]="{ item }">
-        <router-link :to="'profile/'+item.name">
-          {{ item.name }}
-        </router-link>
+        <router-link :to="'profile/'+item.name"><span :title="item.name">{{getTrueNameString(item.name)}}</span></router-link>
+        <span v-for="medal in getMedals(item)" :key="medal.name">
+          <img :src="medal.link" class="medal" :title="medal.description"/>
+        </span>
   </template>
   <template v-slot:[`item.count`]="{ item }">
       <v-chip
@@ -99,8 +100,31 @@ export default {
       });
       return elements;
     },
+    getMedals(reader) {
+      const medals = [];
+      const goldMedal = { name: 'Gold Medal', link: 'https://recordcrash.com/images/gold.png', description: 'A medal granted to those who finish the main shills list' };
+      const silverMedal = { name: 'Silver Medal', link: 'https://recordcrash.com/images/silver.png', description: 'A medal granted to those who finish over ten shills' };
+      const gameMedal = { name: 'Game Medal', link: 'https://recordcrash.com/images/game.png', description: 'A medal granted to those who finish all the games in the shills list' };
+      const tvMedal = { name: 'Video Medal', link: 'https://recordcrash.com/images/tv.png', description: 'A medal granted to those who finish all the video shills' };
+      const bookMedal = { name: 'Book Medal', link: 'https://recordcrash.com/images/book.png', description: 'A medal granted to those who finish the additional shills' };
+      const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+      const gameMedalArray = [30, 31, 32];
+      const tvMedalArray = [33, 34];
+      const bookMedalArray = [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36];
+      const localReads = this.reads.filter((read) => read.readername === reader.name).map((el) => el.work);
+      if (goldMedalArray.every((el) => localReads.includes(el))) medals.push(goldMedal);
+      if (localReads.length > 10) medals.push(silverMedal);
+      if (gameMedalArray.every((el) => localReads.includes(el))) medals.push(gameMedal);
+      if (tvMedalArray.every((el) => localReads.includes(el))) medals.push(tvMedal);
+      if (bookMedalArray.every((el) => localReads.includes(el))) medals.push(bookMedal);
+      return medals;
+    },
     getColor(number) {
       return this.makeColor(number * (number / 518));
+    },
+    getTrueNameString(string) {
+      const length = 12;
+      return string.length > length ? `${string.substring(0, length)}…` : string;
     },
     makeColor(value) {
       // value must be between [0, 510]
@@ -152,5 +176,9 @@ export default {
   /* GOD LOOK AT THIS CODE, IT'S TOTALLY NOT A HUGE EMBARASSING HACK*/
   table > thead > tr > th:nth-child(1) {
     z-index: 3 !important;
+  }
+  .medal {
+    margin-left: 4px;
+    vertical-align: middle;
   }
 </style>

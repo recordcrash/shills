@@ -4,13 +4,19 @@ import ShillsList from '../views/ShillsList.vue';
 import Profile from '../views/Profile.vue';
 import Leaderboard from '../views/Leaderboard.vue';
 import OldLeaderboard from '../views/OldLeaderboard.vue';
-import { authGuard } from '../auth/authGuard';
+import About from '../views/About.vue';
+// import { authGuard } from '../auth/authGuard';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
+    name: 'ShillsList',
+    component: ShillsList,
+  },
+  {
+    path: '/list/:tag',
     name: 'ShillsList',
     component: ShillsList,
   },
@@ -28,7 +34,11 @@ const routes = [
     path: '/profile/:username?',
     name: 'profile',
     component: Profile,
-    beforeEnter: authGuard,
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About,
   },
   {
     path: '/oldlist',

@@ -8,6 +8,7 @@
           outlined
           dense
           chips
+          hide-details
           small-chips
           deletable-chips
           label="Show only"
@@ -20,6 +21,7 @@
           :items="allTags"
           outlined
           dense
+          hide-details
           chips
           small-chips
           deletable-chips
@@ -33,13 +35,14 @@
           :items="sortings"
           label="Sort by"
           outlined
+          hide-details
           dense
         ></v-select>
       </v-col>
     </v-row>
     <div class="shills">
-    <v-layout row wrap>
-      <shill-card v-for="shill in filteredShills" v-bind:key="shill.id" class="ma-5 mx-5" :isAuthenticated="isAuthenticated"
+    <v-layout row wrap justify-center class="pb-3">
+      <shill-card v-for="shill in filteredShills" v-bind:key="shill.id" class="ma-2" :isAuthenticated="isAuthenticated"
       :maxWidth="375"
       :id="shill.id"
       :likes="shill.likes" :reads="shill.readers"
@@ -115,7 +118,19 @@ export default {
     },
     onTag(tag) {
       this.includedTags = [tag];
-      this.excludedTags = [];
+    },
+    processRoute() {
+      if (this.$route.params.tag) {
+        const { tag } = this.$route.params;
+        if (tag === 'all') {
+          this.includedTags = [];
+          this.excludedTags = ['Flawed', 'Main'];
+        } else {
+          const capitalizedTag = tag.charAt(0).toUpperCase() + tag.slice(1);
+          this.includedTags = [capitalizedTag];
+          this.excludedTags = [];
+        }
+      }
     },
   },
   async created() {
@@ -133,6 +148,7 @@ export default {
     this.shills = works;
     this.reads = reads;
     this.likes = likes;
+    this.processRoute();
   },
   data() {
     return {
@@ -140,11 +156,17 @@ export default {
       shills: [],
       reads: [],
       likes: [],
-      includedTags: [],
+      includedTags: ['Main'],
       excludedTags: ['Flawed'],
       sortings: ['Recommended', 'Likes', 'Readers', 'Alphabetical', 'Time investment'],
       sortedBy: 'Recommended',
     };
+  },
+  watch: {
+    // eslint-disable-next-line func-names
+    '$route.params.tag': function () {
+      this.processRoute();
+    },
   },
 };
 </script>

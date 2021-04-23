@@ -21,10 +21,7 @@
           <v-app-bar-nav-icon
             @click.stop="drawer = !drawer"
           ></v-app-bar-nav-icon>
-          <v-icon class="mx-4" large>
-            mdi-notebook-outline
-          </v-icon>
-          <v-toolbar-title class="mr-12 align-center">
+          <v-toolbar-title class="align-center">
             <router-link
               style="text-decoration: none; color: inherit;" to="/">
               <span class="title">The Shills List</span>
@@ -34,7 +31,7 @@
           <router-link v-if="$auth.isAuthenticated" to="/profile"
             >{{ $auth.user.name }}</router-link
           >
-          <div class="ml-3" v-if="!$auth.loading">
+          <div class="mx-3" v-if="!$auth.loading">
             <!-- show login when not authenticated -->
             <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
             <!-- show logout when authenticated -->
@@ -44,7 +41,7 @@
           </div>
         </v-app-bar>
 
-        <v-main>
+        <v-main  style="overflow: hidden;">
           <router-view v-if="$auth" />
         </v-main>
       </v-app>
@@ -77,10 +74,13 @@ export default {
   data: () => ({
     drawer: null,
     items: [
-      { icon: 'mdi-book', text: 'Recommendations', to: '/' },
+      { icon: 'mdi-library', text: 'Main Shills', to: '/list/main' },
+      { icon: 'mdi-book', text: 'More Shills', to: '/list/all' },
+      { icon: 'mdi-weather-lightning', text: 'Flawed Shills', to: '/list/flawed' },
       { icon: 'mdi-trending-up', text: 'Leaderboard', to: '/leaderboard' },
-      { icon: 'mdi-trending-up', text: 'Old Leaderboard', to: '/oldleaderboard' },
-      { icon: 'mdi-trending-up', text: 'Old List', to: '/oldlist' },
+      { icon: 'mdi-trending-down', text: 'Old Leaderboard', to: '/oldleaderboard' },
+      { icon: 'mdi-link', text: 'Old List', to: '/oldlist' },
+      { icon: 'mdi-comment-question', text: 'About', to: '/about' },
     ],
   }),
 };

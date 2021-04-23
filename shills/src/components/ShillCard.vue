@@ -11,7 +11,7 @@
     >
       <v-carousel-item v-for="image in imagesArray" :key="image">
         <a :href="link">
-        <v-img :src="image" gradient="to bottom, #1e1e1e, transparent" height="300">
+        <v-img :src="image" :gradient="cardGradient" height="300">
           <v-card-title lights-out style="text-shadow: 0 0 2px #000, 0 0 3px #000, 0 0 4px #000;">{{name}}</v-card-title>
           <v-card-subtitle style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">{{author}}</v-card-subtitle>
         </v-img>
@@ -21,7 +21,7 @@
     <div style="display: flex; flex-direction: column; flex-grow: 1;">
     <v-card-text><div v-html="description"></div></v-card-text>
     <v-card-actions style="align-items: end; display: flex; flex-grow: 1;">
-      <v-container class="mb-0 pl-1 pb-1">
+      <v-container class="mb-0 pl-1 pb-1 align-self-end">
         <v-slide-group
           multiple
         >
@@ -163,6 +163,10 @@ export default {
     tagsArray() {
       return this.tags.split(',');
     },
+    cardGradient() {
+      if (this.lightArtShills.includes(this.id)) return 'to bottom, black, transparent 60%, transparent';
+      return '';
+    },
   },
   created() {
     this.localLikes = this.likes;
@@ -176,6 +180,7 @@ export default {
       localReads: 0,
       localLiked: false,
       localRead: false,
+      lightArtShills: [1, 14, 17, 22, 37],
     };
   },
 };
@@ -189,6 +194,14 @@ export default {
 .v-slide-group__next, .v-slide-group__prev{
   min-width: 0px !important;
   flex: none !important;
+}
+.spoiler{
+  color: black;
+  background-color:black;
+}
+
+.spoiler:hover{
+  color: white;
 }
 </style>
 
