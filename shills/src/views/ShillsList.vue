@@ -56,6 +56,7 @@
       :amount="shill.amount"
       :images="shill.image"
       :tags="shill.tags"
+      :props="JSON.parse(shill.props)"
       :read="isRead(shill.id)"
       :liked="isLiked(shill.id)"
       @tag="onTag"/>
@@ -122,13 +123,19 @@ export default {
     processRoute() {
       if (this.$route.params.tag) {
         const { tag } = this.$route.params;
-        if (tag === 'all') {
-          this.includedTags = [];
-          this.excludedTags = ['Flawed', 'Main'];
-        } else {
-          const capitalizedTag = tag.charAt(0).toUpperCase() + tag.slice(1);
-          this.includedTags = [capitalizedTag];
-          this.excludedTags = [];
+        const capitalizedTag = tag.charAt(0).toUpperCase() + tag.slice(1);
+        switch (tag) {
+          case 'all':
+            this.includedTags = [];
+            this.excludedTags = ['Flawed', 'Main', 'Custom'];
+            break;
+          case 'custom':
+            this.includedTags = ['Custom'];
+            this.excludedTags = [];
+            break;
+          default:
+            this.includedTags = [capitalizedTag];
+            this.excludedTags = ['Custom'];
         }
       }
     },
@@ -157,7 +164,7 @@ export default {
       reads: [],
       likes: [],
       includedTags: ['Main'],
-      excludedTags: ['Flawed'],
+      excludedTags: ['Flawed', 'Custom'],
       sortings: ['Recommended', 'Likes', 'Readers', 'Alphabetical', 'Time investment'],
       sortedBy: 'Recommended',
     };

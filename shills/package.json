@@ -22,6 +22,7 @@
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.6",
     "vue-router": "^3.5.1",
+    "vue-trend-chart": "^0.15.3",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {

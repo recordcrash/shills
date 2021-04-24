@@ -5,6 +5,7 @@ import Profile from '../views/Profile.vue';
 import Leaderboard from '../views/Leaderboard.vue';
 import OldLeaderboard from '../views/OldLeaderboard.vue';
 import About from '../views/About.vue';
+import Stats from '../views/Stats.vue';
 // import { authGuard } from '../auth/authGuard';
 
 Vue.use(VueRouter);
@@ -12,12 +13,12 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'ShillsList',
+    name: 'ShillsListMain',
     component: ShillsList,
   },
   {
     path: '/list/:tag',
-    name: 'ShillsList',
+    name: 'ShillsListTagged',
     component: ShillsList,
   },
   {
@@ -39,6 +40,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: About,
+  },
+  {
+    path: '/stats',
+    name: 'stats',
+    component: Stats,
   },
   {
     path: '/oldlist',

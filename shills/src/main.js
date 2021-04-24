@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import TrendChart from 'vue-trend-chart';
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import router from './router';
@@ -21,6 +22,8 @@ Vue.use(Auth0Plugin, {
     );
   },
 });
+
+Vue.use(TrendChart);
 
 new Vue({
   vuetify,
