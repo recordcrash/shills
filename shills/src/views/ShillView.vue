@@ -172,7 +172,7 @@ export default {
   async created() {
     const shillId = Number.parseInt(this.$route.params.id, 10) || 1;
     this.id = shillId;
-    this.username = this.$route.params.username || this.$auth.user.name || 'Makin';
+    this.username = this.$auth.user ? this.$auth.user.name : null;
     const promises = await Promise.all([
       await api.requestShillsList(),
       await api.requestAllWorksRead(),
