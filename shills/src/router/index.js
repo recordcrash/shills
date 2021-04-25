@@ -6,6 +6,7 @@ import Leaderboard from '../views/Leaderboard.vue';
 import OldLeaderboard from '../views/OldLeaderboard.vue';
 import About from '../views/About.vue';
 import Stats from '../views/Stats.vue';
+import ShillView from '../views/ShillView.vue';
 // import { authGuard } from '../auth/authGuard';
 
 Vue.use(VueRouter);
@@ -20,6 +21,11 @@ const routes = [
     path: '/list/:tag',
     name: 'ShillsListTagged',
     component: ShillsList,
+  },
+  {
+    path: '/shill/:id',
+    name: 'ShillView',
+    component: ShillView,
   },
   {
     path: '/oldleaderboard',

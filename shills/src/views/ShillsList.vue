@@ -1,7 +1,7 @@
 <template>
   <div class="shills-list">
     <v-row class="filters pa-2">
-      <v-col cols="4">
+      <v-col>
         <v-autocomplete
           v-model="includedTags"
           :items="allTags"
@@ -15,7 +15,7 @@
           multiple
         ></v-autocomplete>
       </v-col>
-      <v-col cols="4">
+      <v-col>
         <v-autocomplete
           v-model="excludedTags"
           :items="allTags"
@@ -29,7 +29,7 @@
           multiple
         ></v-autocomplete>
       </v-col>
-      <v-col cols="4">
+      <v-col>
          <v-select
           v-model="sortedBy"
           :items="sortings"
@@ -39,10 +39,20 @@
           dense
         ></v-select>
       </v-col>
+      <v-col>
+         <v-select
+          v-model="show"
+          :items="showings"
+          label="Completion status"
+          outlined
+          hide-details
+          dense
+        ></v-select>
+      </v-col>
     </v-row>
     <div class="shills">
     <v-layout row wrap justify-center class="pb-3">
-      <shill-card v-for="shill in filteredShills" v-bind:key="shill.id" class="ma-2" :isAuthenticated="isAuthenticated"
+      <shill-card v-for="shill in shownShills" v-bind:key="shill.id" class="ma-2" :isAuthenticated="isAuthenticated"
       :maxWidth="375"
       :id="shill.id"
       :likes="shill.likes" :reads="shill.readers"
@@ -102,6 +112,16 @@ export default {
         (shill) => this.includedTags.every((selTag) => shill.tags.split(',').includes(selTag))
           && !this.excludedTags.some((selTag) => shill.tags.split(',').includes(selTag)),
       );
+    },
+    shownShills() {
+      switch (this.show) {
+        case 'Completed':
+          return this.filteredShills.filter((el) => this.isRead(el.id));
+        case 'Uncompleted':
+          return this.filteredShills.filter((el) => !this.isRead(el.id));
+        default:
+          return this.filteredShills;
+      }
     },
     allTags() {
       const allTags = new Set();
@@ -163,10 +183,13 @@ export default {
       shills: [],
       reads: [],
       likes: [],
+      showUnread: false,
       includedTags: ['Main'],
       excludedTags: ['Flawed', 'Custom'],
       sortings: ['Recommended', 'Likes', 'Readers', 'Alphabetical', 'Time investment'],
       sortedBy: 'Recommended',
+      show: 'All',
+      showings: ['All', 'Uncompleted', 'Completed'],
     };
   },
   watch: {

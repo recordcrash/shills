@@ -16,18 +16,18 @@
         <v-col><b>Shills finished</b>:
         <ul>
           <li v-for="read in reads" :key="read.name">
-            <a :href="read.link">
+            <router-link :to="'/shill/'+read.id">
                {{read.name}}
-            </a>
+            </router-link>
           </li>
         </ul>
         </v-col>
         <v-col><b>Shills liked</b>:
         <ul>
           <li v-for="like in likes" :key="like.name">
-            <a :href="like.link">
+            <router-link :to="'/shill/'+like.id">
               {{like.name}}
-            </a>
+            </router-link>
           </li>
         </ul>
         </v-col>
@@ -74,6 +74,7 @@ export default {
       const gameMedal = { name: 'Game Medal', link: 'https://recordcrash.com/images/game.png', description: 'A medal granted to those who finish all the games in the shills list' };
       const tvMedal = { name: 'Video Medal', link: 'https://recordcrash.com/images/tv.png', description: 'A medal granted to those who finish all the video shills' };
       const bookMedal = { name: 'Book Medal', link: 'https://recordcrash.com/images/book.png', description: 'A medal granted to those who finish the additional shills' };
+      const huskyMedal = { name: 'Husky Medal', link: 'https://recordcrash.com/images/husky.png', description: 'A medal granted to those who read one shill of every list, even custom' };
       const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
       const gameMedalArray = [30, 31, 32];
       const tvMedalArray = [33, 34];
@@ -84,6 +85,12 @@ export default {
       if (gameMedalArray.every((el) => localReads.includes(el))) medals.push(gameMedal);
       if (tvMedalArray.every((el) => localReads.includes(el))) medals.push(tvMedal);
       if (bookMedalArray.every((el) => localReads.includes(el))) medals.push(bookMedal);
+      if (
+        this.readWorks.some((el) => el.tags.includes('Main'))
+        && this.readWorks.some((el) => el.tags.includes('Custom'))
+        && this.readWorks.some((el) => el.tags.includes('Flawed'))
+        && this.readWorks.some((el) => !el.tags.includes('Main') && !el.tags.includes('Flawed') && !el.tags.includes('Custom'))
+      ) medals.push(huskyMedal);
       return medals;
     },
   },
@@ -99,11 +106,17 @@ export default {
     let likeInts = promises[2];
     readInts = readInts.filter((read) => read.readername === this.username).map((el) => el.work);
     likeInts = likeInts.filter((like) => like.readername === this.username).map((el) => el.work);
+    const readWorks = works.filter((work) => readInts.includes(work.id));
     this.works = works;
-    this.reads = works.filter((work) => readInts.includes(work.id)).map((work) => ({ name: work.name, link: work.link, hours: work.hours }));
-    this.likes = works.filter((work) => likeInts.includes(work.id)).map((work) => ({ name: work.name, link: work.link, hours: work.hours }));
+    this.reads = works.filter((work) => readInts.includes(work.id)).map((work) => ({
+      name: work.name, link: work.link, hours: work.hours, id: work.id,
+    }));
+    this.likes = works.filter((work) => likeInts.includes(work.id)).map((work) => ({
+      name: work.name, link: work.link, hours: work.hours, id: work.id,
+    }));
     this.readInts = readInts;
     this.likeInts = likeInts;
+    this.readWorks = readWorks;
   },
   data() {
     return {
@@ -112,6 +125,7 @@ export default {
       likes: [],
       readInts: [],
       likeInts: [],
+      readWorks: [],
       username: '',
     };
   },

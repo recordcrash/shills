@@ -2044,6 +2044,11 @@ body-parser@1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
+body-scroll-lock@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.1.5.tgz#c1392d9217ed2c3e237fee1e910f6cdd80b7aaec"
+  integrity sha512-Yi1Xaml0EvNA0OYWxXiYNqY24AfWkbA6w5vxE7GWxtKfzIbZM+Qw+aSmkgsbWzbHiy/RCSkUZBplVxTA+E4jJg==
+
 bonjour@^3.5.0:
   version "3.5.0"
   resolved "https://registry.npmjs.org/bonjour/-/bonjour-3.5.0.tgz"
@@ -3119,6 +3124,11 @@ deepmerge@^1.5.2:
   version "1.5.2"
   resolved "https://registry.npmjs.org/deepmerge/-/deepmerge-1.5.2.tgz"
   integrity sha512-95k0GDqvBjZavkuvzx/YqVLv/6YYa17fz6ILMSf7neqQITCPbnfEnQvEgMPNjH4kgobe7+WIL0yJEHku+H3qtQ==
+
+deepmerge@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.2.2.tgz#44d2ea3679b8f4d4ffba33f03d865fc1e7bf4955"
+  integrity sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==
 
 default-gateway@^4.2.0:
   version "4.2.0"
@@ -8697,6 +8707,14 @@ vue-cli-plugin-vuetify@~2.3.1:
     semver "^7.1.2"
     shelljs "^0.8.3"
 
+vue-cool-lightbox@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/vue-cool-lightbox/-/vue-cool-lightbox-2.7.2.tgz#6d5ce68e95d8584331af6d435dd9562ca3073fa7"
+  integrity sha512-NAKQS6uevKXhUQSDOz8HGw8Af62r3L5Umntkw+I1+V88fPIgHU6N/5wvxuwjDPng+goRNFnOHGyjONxgViqKpQ==
+  dependencies:
+    body-scroll-lock "^3.1.5"
+    vue "^2.6.10"
+
 vue-eslint-parser@^7.6.0:
   version "7.6.0"
   resolved "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-7.6.0.tgz"
@@ -8734,6 +8752,13 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-meta@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/vue-meta/-/vue-meta-2.4.0.tgz#a419fb4b4135ce965dab32ec641d1989c2ee4845"
+  integrity sha512-XEeZUmlVeODclAjCNpWDnjgw+t3WA6gdzs6ENoIAgwO1J1d5p1tezDhtteLUFwcaQaTtayRrsx7GL6oXp/m2Jw==
+  dependencies:
+    deepmerge "^4.2.2"
+
 vue-router@^3.5.1:
   version "3.5.1"
   resolved "https://registry.npmjs.org/vue-router/-/vue-router-3.5.1.tgz"
@@ -8765,7 +8790,7 @@ vue-trend-chart@^0.15.3:
   resolved "https://registry.yarnpkg.com/vue-trend-chart/-/vue-trend-chart-0.15.3.tgz#14a2e28222891dded74dd743343bfca215f4afa4"
   integrity sha512-DkGC36pgZUOsn8t9cK65kHIW62nVOhKV951v7ZfM8BWepfgU4cOoIlztEqfY+pC5WtC4rRBoXs/fQ4aIDRPlQw==
 
-vue@^2.6.11:
+vue@^2.6.10, vue@^2.6.11:
   version "2.6.12"
   resolved "https://registry.npmjs.org/vue/-/vue-2.6.12.tgz"
   integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==

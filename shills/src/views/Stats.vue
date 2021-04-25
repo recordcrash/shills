@@ -76,7 +76,7 @@ export default {
     stats() {
       const hoursWastedStat = { name: 'Total time wasted', icon: 'mdi-clock', value: this.timeWasted };
       const currentTopReader = { name: 'Top reader', icon: 'mdi-medal-outline', value: `${this.topReader?.readername} (${this.topReader?.value} shills)` };
-      const currentlyShamedUser = { name: 'Laziest reader', icon: 'mdi-emoticon-devil', value: `${this.topShamed?.readername} (${Math.round((this.topShamed?.hours / this.topShamed?.value) * 100) / 100} hours/work)` };
+      const currentlyShamedUser = { name: 'Laziest reader', icon: 'mdi-emoticon-devil', value: `${this.topShamed?.readername} (${Math.round((this.topShamed?.hours / this.topShamed?.value) * 100) / 100} hours/shill)` };
       const userCount = { name: 'User count', icon: 'mdi-human', value: `${this.readArray.length} registered users` };
       const favoriteUser = { name: 'Favorite user', icon: 'mdi-mirror', value: 'You!' };
       return [hoursWastedStat, currentTopReader, currentlyShamedUser, userCount, favoriteUser];
@@ -137,9 +137,10 @@ export default {
       await api.requestAllWorksRead(),
     ]);
     const works = promises[0];
+    const reads = promises[1];
     this.works = works;
-    this.reads = this.prepareReadsArray(promises[1]);
-    this.rawReads = promises[1];
+    this.reads = this.prepareReadsArray(reads);
+    this.rawReads = reads;
   },
 };
 </script>

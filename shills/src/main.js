@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import TrendChart from 'vue-trend-chart';
+import VueMeta from 'vue-meta';
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import router from './router';
@@ -21,6 +22,10 @@ Vue.use(Auth0Plugin, {
         : window.location.pathname,
     );
   },
+});
+
+Vue.use(VueMeta, {
+  refreshOnceOnNavigation: true,
 });
 
 Vue.use(TrendChart);
