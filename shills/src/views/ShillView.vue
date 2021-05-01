@@ -70,6 +70,32 @@
         </v-container>
       </v-card-actions>
     </div>
+    <v-card-title class="pb-0">REVIEWS ({{reviews.length}})</v-card-title>
+    <div style="display: flex; flex-direction: column; flex-grow: 1;" class="">
+      <div v-for="review in reviewsSorted" :key="review.id">
+        <router-link :to="'/profile/'+review.readername"><v-card-title class="pb-0 mb-0">{{review.readername}}</v-card-title></router-link>
+        <v-card-text><span class="review">{{review.review}}</span></v-card-text>
+
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; flex-grow: 1;" class="ma-4" v-if="isAuthenticated">
+      <v-form v-model="valid" ref="form">
+        <v-textarea
+        label="Add new review"
+        auto-grow
+        v-model="reviewContent"
+        :rules="rules"
+      ></v-textarea>
+      <v-btn
+        :disabled="!valid"
+        color="secondary"
+        class="mr-4"
+        @click="onSubmitReview"
+      >
+        Submit
+      </v-btn>
+      </v-form>
+    </div>
   </v-card>
   </div>
 </v-container>
@@ -139,6 +165,26 @@ export default {
         }
       }
     },
+    async onSubmitReview() {
+      const reviewObject = {
+        readername: this.$auth.user.name,
+        workid: this.id,
+        review: this.reviewContent,
+      };
+      try {
+        await api.reviewWork(reviewObject);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.reviews = await api.requestReviewsForWork(this.id);
+      }
+    },
+    handleReviewDefault() {
+      if (this.isAuthenticated) {
+        const found = this.reviews.find((el) => el.readername === this.$auth.user.name);
+        if (found) this.reviewContent = found.review;
+      }
+    },
   },
   computed: {
     isAuthenticated() {
@@ -168,6 +214,12 @@ export default {
     tagsArray() {
       return this.tags.split(',');
     },
+    reviewsSorted() {
+      return [...this.reviews].reverse();
+    },
+    rules() {
+      return [((v) => (v || '').length <= 5327 || 'A maximum of 5327 characters is allowed')];
+    },
   },
   async created() {
     const shillId = Number.parseInt(this.$route.params.id, 10) || 1;
@@ -177,11 +229,13 @@ export default {
       await api.requestShillsList(),
       await api.requestAllWorksRead(),
       await api.requestAllWorksLiked(),
+      await api.requestReviewsForWork(shillId),
     ]);
     const works = promises[0];
     const work = works.find((el) => el.id === shillId);
     let readInts = promises[1];
     let likeInts = promises[2];
+    const reviews = promises[3];
     this.readers = readInts.filter((el) => el.work === shillId).map((el) => el.readername);
     this.likers = likeInts.filter((el) => el.work === shillId).map((el) => el.readername);
     readInts = readInts.filter((read) => read.readername === this.username).map((el) => el.work);
@@ -202,6 +256,8 @@ export default {
     this.localLikes = work.likes;
     this.localReads = work.readers;
     this.shortname = work.shortname;
+    this.reviews = reviews;
+    this.handleReviewDefault();
     this.props = JSON.parse(work.props);
     this.read = !!promises[1].find((el) => el.readername === this.$auth?.user?.name && el.work === shillId);
     this.liked = !!promises[2].find((el) => el.readername === this.$auth?.user?.name && el.work === shillId);
@@ -226,18 +282,30 @@ export default {
       likers: [],
       readInts: [],
       likeInts: [],
+      reviews: [],
       username: '',
       localLikes: 0,
       localReads: 0,
       read: false,
       liked: false,
+      valid: false,
+      reviewContent: null,
     };
+  },
+  watch: {
+    ownReviewContent(oldContent, newContent) {
+      this.reviewContent = newContent;
+    },
   },
 };
 </script>
 
 <style scoped>
 a {text-decoration: none; }
+.review {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
 </style>
 
 <style>

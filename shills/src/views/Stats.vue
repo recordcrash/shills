@@ -65,9 +65,9 @@ export default {
       return readArray;
     },
     timeWasted() {
-      const years = Math.floor(this.hoursWasted / 365 / 24);
-      const months = Math.floor(this.hoursWasted / 24 / 30) - years * 12;
-      const days = Math.floor(this.hoursWasted / 24) - months * 30 - years * 365;
+      const years = Math.floor(this.hoursWasted / 365.2422 / 24);
+      const months = Math.floor((this.hoursWasted / 24 / 30.436875) - years * 12);
+      const days = Math.floor((this.hoursWasted / 24) - months * 30 - years * 365.2422);
       const yearString = years !== 1 ? `${years} years` : '1 year';
       const monthString = months !== 1 ? `${months} months` : '1 month';
       const dayString = days !== 1 ? `${days} days` : '1 day';

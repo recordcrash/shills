@@ -32,6 +32,14 @@
         </ul>
         </v-col>
         </v-row>
+        <v-card-title class="pb-0">Reviews by {{username}}</v-card-title>
+        <div style="display: flex; flex-direction: column; flex-grow: 1;" class="">
+          <div v-for="review in sortedReviews" :key="review.id">
+            <router-link :to="'/shill/'+review.workid"><v-card-title class="pb-0 mb-0">{{getWorkName(review.workid)}}</v-card-title></router-link>
+            <v-card-text><span class="review">{{review.review}}</span></v-card-text>
+
+          </div>
+        </div>
     </div>
   </div>
 </v-container>
@@ -43,6 +51,9 @@ import api from '../auth/api';
 export default {
   name: 'Profile',
   computed: {
+    sortedReviews() {
+      return [...this.reviews].reverse();
+    },
     worksReadString() {
       return `${this.numberRead}/${this.totalWorks}`;
     },
@@ -75,7 +86,7 @@ export default {
       const tvMedal = { name: 'Video Medal', link: 'https://recordcrash.com/images/tv.png', description: 'A medal granted to those who finish all the video shills' };
       const bookMedal = { name: 'Book Medal', link: 'https://recordcrash.com/images/book.png', description: 'A medal granted to those who finish the additional shills' };
       const huskyMedal = { name: 'Husky Medal', link: 'https://recordcrash.com/images/husky.png', description: 'A medal granted to those who read one shill of every list, even custom' };
-      const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+      const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
       const gameMedalArray = [30, 31, 32];
       const tvMedalArray = [33, 34];
       const bookMedalArray = [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36];
@@ -94,16 +105,23 @@ export default {
       return medals;
     },
   },
+  methods: {
+    getWorkName(id) {
+      return this.works.find((work) => work.id === id).name;
+    },
+  },
   async created() {
     this.username = this.$route.params.username || this.$auth.user.name;
     const promises = await Promise.all([
       await api.requestShillsList(),
       await api.requestAllWorksRead(),
       await api.requestAllWorksLiked(),
+      await api.requestReviewsByReader(this.username),
     ]);
     const works = promises[0];
     let readInts = promises[1];
     let likeInts = promises[2];
+    const reviews = promises[3];
     readInts = readInts.filter((read) => read.readername === this.username).map((el) => el.work);
     likeInts = likeInts.filter((like) => like.readername === this.username).map((el) => el.work);
     const readWorks = works.filter((work) => readInts.includes(work.id));
@@ -117,6 +135,7 @@ export default {
     this.readInts = readInts;
     this.likeInts = likeInts;
     this.readWorks = readWorks;
+    this.reviews = reviews;
   },
   data() {
     return {
@@ -126,8 +145,16 @@ export default {
       readInts: [],
       likeInts: [],
       readWorks: [],
+      reviews: [],
       username: '',
     };
   },
 };
 </script>
+
+<style scoped>
+.review {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+</style>
