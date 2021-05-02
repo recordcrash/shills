@@ -16,7 +16,7 @@
         <v-col><b>Shills finished</b>:
         <ul>
           <li v-for="read in reads" :key="read.name">
-            <router-link :to="'/shill/'+read.id">
+            <router-link :to="'/shill/'+read.id+'/'+read.name.replace(/ /g, '+')">
                {{read.name}}
             </router-link>
           </li>
@@ -25,7 +25,7 @@
         <v-col><b>Shills liked</b>:
         <ul>
           <li v-for="like in likes" :key="like.name">
-            <router-link :to="'/shill/'+like.id">
+            <router-link :to="'/shill/'+like.id+'/'+like.name.replace(/ /g, '+')">
               {{like.name}}
             </router-link>
           </li>
@@ -35,7 +35,7 @@
         <v-card-title class="pb-0">Reviews by {{username}}</v-card-title>
         <div style="display: flex; flex-direction: column; flex-grow: 1;" class="">
           <div v-for="review in sortedReviews" :key="review.id">
-            <router-link :to="'/shill/'+review.workid"><v-card-title class="pb-0 mb-0">{{getWorkName(review.workid)}}</v-card-title></router-link>
+            <router-link :to="'/shill/'+review.workid+'/'+getWorkName(review.workid).replace(/ /g, '+')"><v-card-title class="pb-0 mb-0">{{getWorkName(review.workid)}}</v-card-title></router-link>
             <v-card-text><span class="review">{{review.review}}</span></v-card-text>
 
           </div>
@@ -111,7 +111,8 @@ export default {
     },
   },
   async created() {
-    this.username = this.$route.params.username || this.$auth.user.name;
+    this.username = this.$route.params.username.replace(/\+/g, ' ') || this.$auth.user.name;
+    document.title = this.username ? `${this.username} - The Shills List` : 'User Profile - The Shills List';
     const promises = await Promise.all([
       await api.requestShillsList(),
       await api.requestAllWorksRead(),

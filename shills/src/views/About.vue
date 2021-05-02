@@ -12,7 +12,7 @@
               </ul>
           <p><h3>More information</h3>
           <p>The Shills List is open source, and available at <a href="https://github.com/recordcrash/shills/">Github</a>. Pull requests are encouraged.</p>
-          <p>For more information,feedback, or custom shill requests, join the <a href="https://discord.gg/aknu95AZWZ">Shills List discord channel</a>.</p>
+          <p>For more information, feedback, or custom shill requests, join the <a href="https://discord.gg/aknu95AZWZ">Shills List discord channel</a>.</p>
         </v-card-text>
     </v-card>
   </div>

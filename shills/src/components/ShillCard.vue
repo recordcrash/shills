@@ -10,7 +10,7 @@
       height="300"
     >
       <v-carousel-item v-for="image in imagesArray" :key="image">
-        <router-link :to="'/shill/'+id">
+        <router-link :to="'/shill/'+id+'/'+name.replace(/ /g, '+')">
         <v-img :src="image" :gradient="cardGradient" height="300">
           <v-card-title lights-out style="text-shadow: 0 0 2px #000, 0 0 3px #000, 0 0 4px #000;">{{name}}</v-card-title>
           <v-card-subtitle style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">{{author}}</v-card-subtitle>

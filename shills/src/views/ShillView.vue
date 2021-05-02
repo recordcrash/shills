@@ -6,34 +6,24 @@
     <v-card-subtitle style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">Author: {{author}}</v-card-subtitle>
     <v-card-text style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">Available at: <a :href="link">{{link}}</a></v-card-text>
     <v-card-text class="py-0">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-        <div v-bind="attrs" v-on="on"> Click flag to mark as read:
-        <v-icon class="mr-1" v-if="!isAuthenticated" @click="onRead(id)"> mdi-flag-outline </v-icon>
-        <v-icon class="mr-1" v-else-if="isAuthenticated && !read" @click="onRead(id)"> mdi-flag-outline </v-icon>
-        <v-icon class="mr-1" v-else @click="onRead(id)"> mdi-flag </v-icon>
-        </div>
-        </template>
-        <span>{{readTooltip}}</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <div v-bind="attrs" v-on="on"> Click heart to mark as liked:
-          <v-icon class="mr-1" v-if="!isAuthenticated" @click="onLike(id)"> mdi-heart-outline </v-icon>
-          <v-icon class="mr-1" v-else-if="isAuthenticated && !liked" @click="onLike(id)"> mdi-heart-outline </v-icon>
-          <v-icon class="mr-1" v-else @click="onLike(id)"> mdi-heart </v-icon>
-          </div>
-      </template>
-        <span>{{likedTooltip}}</span>
-      </v-tooltip>
+      <div> Click flag to mark as read:
+      <v-icon class="mr-1" v-if="!isAuthenticated" @click="onRead(id)"> mdi-flag-outline </v-icon>
+      <v-icon class="mr-1" v-else-if="isAuthenticated && !read" @click="onRead(id)"> mdi-flag-outline </v-icon>
+      <v-icon class="mr-1" v-else @click="onRead(id)"> mdi-flag </v-icon>
+      </div>
+      <div> Click heart to mark as liked:
+      <v-icon class="mr-1" v-if="!isAuthenticated" @click="onLike(id)"> mdi-heart-outline </v-icon>
+      <v-icon class="mr-1" v-else-if="isAuthenticated && !liked" @click="onLike(id)"> mdi-heart-outline </v-icon>
+      <v-icon class="mr-1" v-else @click="onLike(id)"> mdi-heart </v-icon>
+      </div>
     </v-card-text>
     <v-card-title>DESCRIPTION</v-card-title>
     <v-card-text><div v-html="description"></div></v-card-text>
     <v-card-title>INFORMATION</v-card-title>
     <v-card-text>Time investment: {{hours === 1 ? '1 hour' : hours + ' hours'}} {{hours !=1 ? '('+timeString+')' : ''}}
       <br>{{amount}}
-      <br>Read by: <span v-for="(reader,index) in readers" :key="'reader'+index"><span v-if="index>0">, </span><router-link :to="'/profile/'+reader">{{reader}}</router-link></span>
-      <br>Liked by: <span v-for="(liker,index) in likers" :key="'liker'+index"><span v-if="index>0">, </span><router-link :to="'/profile/'+liker">{{liker}}</router-link></span>
+      <br>Read by: <span v-for="(reader,index) in readers" :key="'reader'+index"><span v-if="index>0">, </span><router-link :to="'/profile/'+reader.replace(/ /g, '+')">{{reader}}</router-link></span>
+      <br>Liked by: <span v-for="(liker,index) in likers" :key="'liker'+index"><span v-if="index>0">, </span><router-link :to="'/profile/'+liker.replace(/ /g, '+')">{{liker}}</router-link></span>
       <br>Leaderboard tag: {{shortname}}
     </v-card-text>
     <v-card-title>ART</v-card-title>
@@ -73,7 +63,8 @@
     <v-card-title class="pb-0">REVIEWS ({{reviews.length}})</v-card-title>
     <div style="display: flex; flex-direction: column; flex-grow: 1;" class="">
       <div v-for="review in reviewsSorted" :key="review.id">
-        <router-link :to="'/profile/'+review.readername"><v-card-title class="pb-0 mb-0">{{review.readername}}</v-card-title></router-link>
+          <router-link :to="'/profile/'+review.readername.replace(/ /g, '+')"><v-card-title class="pb-0 mb-0">{{review.readername}}</v-card-title></router-link>
+          <v-card-subtitle>{{new Date(review.created).toLocaleDateString("en",{timeZone:"UTC"})}}</v-card-subtitle>
         <v-card-text><span class="review">{{review.review}}</span></v-card-text>
 
       </div>
@@ -81,7 +72,7 @@
     <div style="display: flex; flex-direction: column; flex-grow: 1;" class="ma-4" v-if="isAuthenticated">
       <v-form v-model="valid" ref="form">
         <v-textarea
-        label="Add new review"
+        :label="reviewLabel"
         auto-grow
         v-model="reviewContent"
         :rules="rules"
@@ -190,6 +181,11 @@ export default {
     isAuthenticated() {
       return this.$auth.isAuthenticated;
     },
+    reviewLabel() {
+      const found = this.reviews.find((el) => el.readername === this.$auth.user.name);
+      if (found) return 'Edit your review';
+      return 'Add new review';
+    },
     timeString() {
       let localTime = this.hours * 6; // Let's assume people put 4 hours into a long shill a day at most
       if (localTime > 1437) return `${Math.trunc(localTime / 720)} months`;
@@ -201,12 +197,6 @@ export default {
       if (localTime > 23) return `${Math.trunc(localTime / 24)} day`;
       if (localTime > 1) return `${localTime} hours`;
       return `${localTime} hour`;
-    },
-    likedTooltip() {
-      return `${this.localLikes} people have enjoyed this work`;
-    },
-    readTooltip() {
-      return `${this.localReads} people have finished this work`;
     },
     items() {
       return this.props.art ? this.props.art : [];
@@ -233,6 +223,7 @@ export default {
     ]);
     const works = promises[0];
     const work = works.find((el) => el.id === shillId);
+    document.title = work?.name ? `${work.name} - The Shills List` : 'Work Page - The Shills List';
     let readInts = promises[1];
     let likeInts = promises[2];
     const reviews = promises[3];
