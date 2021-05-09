@@ -27,7 +27,7 @@
           </router-link>
         </v-toolbar-title>
         <v-spacer />
-        <router-link v-if="$auth.isAuthenticated" :to="`/profile/${$auth.user.name.replace(/ /g, '+')}`"
+        <router-link v-if="$auth.isAuthenticated" :to="`/profile/${$auth.user.name ? $auth.user.name.replace(/ /g, '+') : ''}`"
           >{{ $auth.user.name }}</router-link
         >
         <div class="mx-3" v-if="!$auth.loading">
