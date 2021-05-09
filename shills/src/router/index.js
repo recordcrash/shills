@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 import ShillsList from '../views/ShillsList.vue';
 import Profile from '../views/Profile.vue';
 import Leaderboard from '../views/Leaderboard.vue';
-import OldLeaderboard from '../views/OldLeaderboard.vue';
 import About from '../views/About.vue';
 import Stats from '../views/Stats.vue';
 import ShillView from '../views/ShillView.vue';
@@ -13,7 +12,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: '/list/',
     name: 'ShillsListMain',
     component: ShillsList,
     meta: {
@@ -85,24 +84,6 @@ const routes = [
     },
   },
   {
-    path: '/oldleaderboard',
-    name: 'oldleaderboard',
-    component: OldLeaderboard,
-    meta: {
-      title: 'Old Leaderboard - The Shills List',
-      metaTags: [
-        {
-          name: 'description',
-          content: 'The old, static leaderboard for the Shills List. No longer updated.',
-        },
-        {
-          property: 'og:description',
-          content: 'The old, static leaderboard for the Shills List. No longer updated.',
-        },
-      ],
-    },
-  },
-  {
     path: '/leaderboard',
     name: 'leaderboard',
     component: Leaderboard,
@@ -157,28 +138,28 @@ const routes = [
     },
   },
   {
-    path: '/stats',
+    path: '/',
     name: 'stats',
     component: Stats,
     meta: {
-      title: 'Stats Page - The Shills List',
+      title: 'The Shills List',
       metaTags: [
         {
           name: 'description',
-          content: 'The statistics of the Shills List. Trending shills, global stats, best users, and the like.',
+          content: 'A list of multimedia works that any internet user will enjoy, from Worm to Kid Radd.',
         },
         {
           property: 'og:description',
-          content: 'The statistics of the Shills List. Trending shills, global stats, best users, and the like.',
+          content: 'A list of multimedia works that any internet user will enjoy, from Worm to Kid Radd.',
         },
       ],
     },
   },
-  {
+  /** {
     path: '/oldlist',
     // eslint-disable-next-line no-restricted-globals
     beforeEnter() { window.open('https://recordcrash.com/shills.html'); },
-  },
+  }, */
 ];
 
 const router = new VueRouter({

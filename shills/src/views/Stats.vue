@@ -1,19 +1,52 @@
 <template>
   <div class="statsList">
-    <div class="d-flex flex-row justify-center"><h1>TRENDING SHILLS</h1></div>
-    <div class="d-flex flex-row ma-6 justify-center">
-      <div class="frameworks justify-center" v-if="reads">
-        <shill-stat v-for="(read,i) in topReads" :key="i" :index="i + 1" :data="read.data" :slug="read.slug" />
+    <div class="d-flex flex-row justify-center pt-3 pb-0"><h2>WELCOME TO <router-link to="/list/main">THE SHILLS LIST</router-link></h2></div>
+    <div class="d-flex flex-row flex-wrap justify-center ma-6">
+      <div class="justify-center">
+        <v-row justify="center">
+          <v-col v-if="latestCompletions" class="latestCompletions">
+            <v-card-title>RECENT ACTIVITY</v-card-title>
+            <div v-if="latestCompletions">
+              <v-list-item two-line v-for="(work, index) in latestCompletions" :key="index">
+                <v-list-item-content>
+                  <router-link :to="work.link"><v-list-item-title>{{work.readername}}</v-list-item-title></router-link>
+                  <v-list-item-subtitle>{{work.name}}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </div>
+          </v-col>
+          <v-col class="latestReviews">
+            <v-card-title class="pb-0">LATEST REVIEWS</v-card-title>
+            <div v-if="latestReviews">
+              <div v-for="(review, index) in latestReviews" :key="index">
+                  <router-link :to="getWorkUrl(review.workid)"><v-card-title class="pb-0">{{getWorkName({work: review.workid})}}</v-card-title></router-link>
+                  <router-link :to="getReaderUrl(review.readername)"><v-card-subtitle class="pt-0 font-italic">{{review.readername}}</v-card-subtitle></router-link>
+                  <v-card-text class="py-0"><span class="review">{{review.review}}</span></v-card-text>
+              </div>
+            </div>
+          </v-col>
+          <v-col class="globalStats">
+            <v-card-title class="pb-0">GLOBAL STATS</v-card-title>
+            <div class="stat d-flex flex-row flex-wrap justify-center" v-if="stats" >
+              <v-row class="stat justify-center ml-3 mt-2" v-for="(stat, i) in stats" :key="i">
+                <v-row align="center" justify="center"><v-col class="statIcon"><v-row justify="center"><v-icon large>{{stat.icon}}</v-icon></v-row></v-col>
+                <v-col class="statText"><v-card-title>{{stat.name}}</v-card-title>
+                <v-card-text>{{stat.value}}</v-card-text></v-col></v-row>
+              </v-row>
+            </div>
+          </v-col>
+          <v-col class="trendingShills">
+            <v-card-title class="pb-0">TRENDING SHILLS</v-card-title>
+            <div class="d-flex flex-row ma-6 justify-start">
+              <div class="frameworks" v-if="reads">
+                <shill-stat v-for="(read,i) in topReads" :key="i" :index="i + 1" :data="read.data" :slug="read.slug" />
+              </div>
+            </div>
+          </v-col>
+        </v-row>
       </div>
     </div>
-    <div class="d-flex flex-row justify-center"><h1>GLOBAL STATS</h1></div>
-    <div class="d-flex flex-row flex-wrap justify-center">
-      <div class="stat justify-center" v-for="(stat, i) in stats" :key="i">
-        <v-row align="center" justify="center"><v-col class="statIcon"><v-row justify="center"><v-icon large>{{stat.icon}}</v-icon></v-row></v-col>
-        <v-col class="statText"><v-card-title>{{stat.name}}</v-card-title>
-        <v-card-text>{{stat.value}}</v-card-text></v-col></v-row>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -32,6 +65,7 @@ export default {
       works: [],
       reads: [],
       rawReads: [],
+      reviews: [],
       hoursWasted: 0,
     };
   },
@@ -49,6 +83,16 @@ export default {
     },
     topShamed() {
       return [...this.readArray].filter((el) => el.hours > 30).sort((a, b) => a.hours / a.value - b.hours / b.value)[0];
+    },
+    latestReviews() {
+      return [...this.reviews].reverse().slice(0, 4);
+    },
+    latestCompletions() {
+      return [...this.rawReads].reverse().slice(0, 8).map((el) => ({
+        name: this.getWorkName({ work: el.work }),
+        readername: el.readername,
+        link: this.getReaderUrl(el.readername),
+      }));
     },
     readArray() {
       const readArray = [];
@@ -105,6 +149,12 @@ export default {
     getWorkName(work) {
       return this.works.find((el) => el.id === work.work)?.name;
     },
+    getWorkUrl(id) {
+      return `/shill/${id}/${this.works.find((el) => el.id === id)?.name.replace(/ /g, '+')}`;
+    },
+    getReaderUrl(readername) {
+      return `/profile/${readername.replace(/ /g, '+')}`;
+    },
     addTime(read) {
       const found = this.works.find((el) => el.id === read.work);
       this.hoursWasted += found && found.hours ? found.hours : 0;
@@ -131,16 +181,16 @@ export default {
       return dataArray;
     },
   },
-  async created() {
+  async mounted() {
     const promises = await Promise.all([
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
       await api.requestAllWorksRead(),
     ]);
-    const works = promises[0];
-    const reads = promises[1];
+    const [works, reads] = promises;
     this.works = works;
     this.reads = this.prepareReadsArray(reads);
     this.rawReads = reads;
+    this.reviews = await api.requestAllReviews();
   },
 };
 </script>
@@ -148,7 +198,7 @@ export default {
 <style lang="scss">
 .stat {
   max-width: 400px;
-  min-width: 325px;
+  min-width: 300px;
   .statIcon {
     flex-basis: 20%;
   }
@@ -159,6 +209,7 @@ export default {
 .frameworks {
   display: flex;
   flex-wrap: wrap;
+  max-width: 200px;
   .vtc {
     width: 160px;
     height: 60px;
@@ -179,5 +230,20 @@ export default {
   .point.is-active {
     display: block;
   }
+}
+</style>
+
+<style scoped>
+a {text-decoration: none; }
+.review {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+.latestCompletions {
+  max-width: 360px;
+}
+.latestReviews {
+  max-width: 800px;
+  min-width: 300px;
 }
 </style>

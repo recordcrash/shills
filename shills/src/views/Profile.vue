@@ -110,7 +110,7 @@ export default {
       return this.works.find((work) => work.id === id).name;
     },
   },
-  async created() {
+  async mounted() {
     this.username = this.$route.params.username.replace(/\+/g, ' ') || this.$auth.user.name;
     document.title = this.username ? `${this.username} - The Shills List` : 'User Profile - The Shills List';
     const promises = await Promise.all([

@@ -33,16 +33,20 @@ const api = {
     const { data } = await axios.get('https://recordcrash.com:3141/works/worksliked/1');
     return data;
   },
+  async requestAllReviews() {
+    const { data } = await axios.get('https://recordcrash.com:3141/reviews/');
+    return data;
+  },
   async requestReviewsForWork(id) {
-    const { data } = await axios.get(`https://recordcrash.com:3141/works/reviews/${id}`);
+    const { data } = await axios.get(`https://recordcrash.com:3141/reviews/${id}`);
     return data;
   },
   async requestReviewsByReader(username) {
-    const { data } = await axios.get(`https://recordcrash.com:3141/works/reviewsbyreader/${username}`);
+    const { data } = await axios.get(`https://recordcrash.com:3141/reviews/reader/${username}`);
     return data;
   },
   async reviewWork(reviewObject) {
-    const { data } = await axios.post(`https://recordcrash.com:3141/works/review/${reviewObject.workid}`, reviewObject);
+    const { data } = await axios.post(`https://recordcrash.com:3141/reviews/review/${reviewObject.workid}`, reviewObject);
     return data;
   },
   async likeWork(id, readername) {

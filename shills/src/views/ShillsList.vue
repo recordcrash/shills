@@ -76,9 +76,9 @@ export default {
     shownShills() {
       switch (this.show) {
         case 'Completed':
-          return this.filteredShills.filter((el) => this.isRead(el.id));
+          return this.filteredShills.filter((el) => this.shillIsRead(el.id));
         case 'Uncompleted':
-          return this.filteredShills.filter((el) => !this.isRead(el.id));
+          return this.filteredShills.filter((el) => !this.shillIsRead(el.id));
         default:
           return this.filteredShills;
       }
@@ -93,6 +93,9 @@ export default {
   methods: {
     onTag(tag) {
       this.includedTags = [tag];
+    },
+    shillIsRead(id) {
+      return !!this.reads.find((el) => el.readername === this.$auth?.user?.name && el.work === id);
     },
     processRoute() {
       if (this.$route.params.tag) {
@@ -114,7 +117,7 @@ export default {
       }
     },
   },
-  async created() {
+  async mounted() {
     // Load list of works and set up filters
     const works = await api.requestShillsList({ auth: this.$auth, type: this.type });
     this.shills = Shill.toInstanceList(works);

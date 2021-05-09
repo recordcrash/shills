@@ -204,7 +204,7 @@ export default {
       return !!this.allWorksLiked.find((el) => el.readername === this.$auth?.user?.name && el.work === this.work.id);
     },
   },
-  async created() {
+  async mounted() {
     document.title = this.$route.params.name ? `${this.$route.params.name.replace(/\+/g, ' ')} - The Shills List` : 'Work page - The Shills List';
     // Check shill exists before doing anything, else return to home page
     const shillId = Number.parseInt(this.$route.params.id, 10) || 1;

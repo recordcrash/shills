@@ -42,7 +42,7 @@ export default {
       return [...this.elements].sort((a, b) => b.count - a.count);
     },
   },
-  async created() {
+  async mounted() {
     const promises = await Promise.all([
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
       await api.requestAllWorksRead(),

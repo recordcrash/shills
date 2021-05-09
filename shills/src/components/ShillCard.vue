@@ -151,7 +151,7 @@ export default {
       return !!this.likes.find((el) => el.readername === this.$auth?.user?.name && el.work === this.work.id);
     },
   },
-  created() {
+  mounted() {
     this.localLikes = this.work.likes;
     this.localReads = this.work.readers;
     this.localLiked = this.isLiked;
