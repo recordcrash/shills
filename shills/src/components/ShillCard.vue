@@ -1,34 +1,24 @@
 <template>
   <v-card elevation="24" :max-width="maxWidth" :min-width="minWidth" style="display: flex; flex-direction: column;">
     <v-carousel
-      :continuous="true"
-      :cycle="false"
-      :show-arrows="false"
-      hide-delimiter-background
-      delimiter-icon="mdi-minus"
-      :hide-delimiters="hasSingleImage"
-      height="300"
-    >
-      <v-carousel-item v-for="image in imagesArray" :key="image">
-        <router-link :to="'/shill/'+id+'/'+name.replace(/ /g, '+')">
-        <v-img :src="image" :gradient="cardGradient" height="300">
-          <v-card-title lights-out style="text-shadow: 0 0 2px #000, 0 0 3px #000, 0 0 4px #000;">{{name}}</v-card-title>
-          <v-card-subtitle style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">{{author}}</v-card-subtitle>
+      :continuous="true" :cycle="false" :show-arrows="false" hide-delimiter-background delimiter-icon="mdi-minus"
+      :hide-delimiters="work.hasSingleImage()"
+      height="300">
+      <v-carousel-item v-for="(image, index) in work.image" :key="index">
+        <router-link :to="'/shill/'+work.id+'/'+work.name.replace(/ /g, '+')">
+        <v-img :src="image" :gradient="work.cardGradient()" height="300">
+          <v-card-title lights-out style="text-shadow: 0 0 2px #000, 0 0 3px #000, 0 0 4px #000;">{{work.name}}</v-card-title>
+          <v-card-subtitle style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">{{work.author}}</v-card-subtitle>
         </v-img>
         </router-link>
       </v-carousel-item>
     </v-carousel>
     <div style="display: flex; flex-direction: column; flex-grow: 1;">
-    <v-card-text><div v-html="description"></div></v-card-text>
+    <v-card-text><div v-html="work.description"></div></v-card-text>
     <v-card-actions style="align-items: end; display: flex; flex-grow: 1;">
       <v-container class="mb-0 pl-1 pb-1 align-self-end">
-        <v-slide-group
-          multiple
-        >
-          <v-slide-item
-            v-for="tag in tagsArray"
-            :key="tag"
-          >
+        <v-slide-group multiple>
+          <v-slide-item v-for="tag in work.tags" :key="tag">
             <v-chip class="mr-1" @click="onClickTag(tag)">{{tag}}</v-chip>
           </v-slide-item>
         </v-slide-group>
@@ -37,10 +27,10 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <div v-bind="attrs" v-on="on">
-              <v-icon class="mr-1" v-if="!isAuthenticated" @click="onLike(id)"> mdi-heart-outline </v-icon>
-              <v-icon class="mr-1" v-else-if="isAuthenticated && !localLiked" @click="onLike(id)"> mdi-heart-outline </v-icon>
-              <v-icon class="mr-1" v-else @click="onLike(id)"> mdi-heart </v-icon>
-              <span  class="subheading mr-2">{{localLikes}}</span>
+              <v-icon class="mr-1" v-if="!isAuthenticated" @click="onLike(work.id)"> mdi-heart-outline </v-icon>
+              <v-icon class="mr-1" v-else-if="isAuthenticated && !localLiked" @click="onLike(work.id)"> mdi-heart-outline </v-icon>
+              <v-icon class="mr-1" v-else @click="onLike(work.id)"> mdi-heart </v-icon>
+              <span class="subheading mr-2">{{localLikes}}</span>
               </div>
            </template>
             <span>{{likedTooltip}}</span>
@@ -49,10 +39,10 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
             <div v-bind="attrs" v-on="on">
-            <v-icon class="mr-1" v-if="!isAuthenticated" @click="onRead(id)"> mdi-flag-outline </v-icon>
-            <v-icon class="mr-1" v-else-if="isAuthenticated && !localRead" @click="onRead(id)"> mdi-flag-outline </v-icon>
-            <v-icon class="mr-1" v-else @click="onRead(id)"> mdi-flag </v-icon>
-            <span v-bind="attrs" v-on="on" class="subheading mr-2">{{localReads}}</span>
+            <v-icon class="mr-1" v-if="!isAuthenticated" @click="onRead(work.id)"> mdi-flag-outline </v-icon>
+            <v-icon class="mr-1" v-else-if="isAuthenticated && !localRead" @click="onRead(work.id)"> mdi-flag-outline </v-icon>
+            <v-icon class="mr-1" v-else @click="onRead(work.id)"> mdi-flag </v-icon>
+            <span class="subheading mr-2">{{localReads}}</span>
             </div>
             </template>
             <span>{{readTooltip}}</span>
@@ -62,13 +52,13 @@
             <template v-slot:activator="{ on, attrs }">
               <div v-bind="attrs" v-on="on">
                 <v-icon class="mr-1"> mdi-clock </v-icon>
-                <span class="subheading" >{{timeString}}</span>
+                <span class="subheading" >{{work.timeString()}}</span>
               </div>
             </template>
-            <span>{{amount}}</span>
+            <span>{{work.amount}}</span>
           </v-tooltip>
           <v-spacer/>
-          <a :href="link">{{linkText}}</a>
+          <a :href="work.link">{{work.linkText}}</a>
         </v-row>
       </v-list-item>
       </v-container>
@@ -79,27 +69,16 @@
 
 <script>
 import api from '../auth/api';
+import Shill from '../models/shill';
 
 export default {
   props: {
     isAuthenticated: Boolean,
-    id: Number,
-    name: String,
-    description: String,
-    likes: Number,
-    reads: Number,
-    link: String,
-    linkText: String,
-    author: String,
-    amount: String,
-    hours: Number,
-    tags: String,
-    images: String,
-    props: Object,
+    work: Shill,
     maxWidth: Number,
     minWidth: Number,
-    read: Boolean,
-    liked: Boolean,
+    reads: Array,
+    likes: Array,
   },
   methods: {
     onClickTag(tag) {
@@ -159,43 +138,24 @@ export default {
     },
   },
   computed: {
-    timeString() {
-      let localTime = this.hours * 6; // Let's assume people put 4 hours into a long shill a day at most
-      if (localTime > 1437) return `${Math.trunc(localTime / 720)} months`;
-      if (localTime > 719) return `${Math.trunc(localTime / 720)} month`;
-      if (localTime > 333) return `${Math.trunc(localTime / 168)} weeks`;
-      if (localTime > 167) return `${Math.trunc(localTime / 168)} week`;
-      if (localTime > 47) return `${Math.trunc(localTime / 24)} days`;
-      localTime = this.hours; // Readjust for small quantities
-      if (localTime > 23) return `${Math.trunc(localTime / 24)} day`;
-      if (localTime > 1) return `${localTime} hours`;
-      return `${localTime} hour`;
-    },
-    hasSingleImage() {
-      return this.imagesArray.length < 2;
-    },
     likedTooltip() {
       return `${this.localLikes} people have enjoyed this work`;
     },
     readTooltip() {
       return `${this.localReads} people have finished this work`;
     },
-    imagesArray() {
-      return this.images.split(',');
+    isRead() {
+      return !!this.reads.find((el) => el.readername === this.$auth?.user?.name && el.work === this.work.id);
     },
-    tagsArray() {
-      return this.tags.split(',');
-    },
-    cardGradient() {
-      if (this.props && this.props.light) return 'to bottom, black, transparent 60%, transparent';
-      return '';
+    isLiked() {
+      return !!this.likes.find((el) => el.readername === this.$auth?.user?.name && el.work === this.work.id);
     },
   },
   created() {
-    this.localLikes = this.likes;
-    this.localReads = this.reads;
-    this.localLiked = this.liked;
-    this.localRead = this.read;
+    this.localLikes = this.work.likes;
+    this.localReads = this.work.readers;
+    this.localLiked = this.isLiked;
+    this.localRead = this.isRead;
   },
   data() {
     return {
@@ -204,6 +164,14 @@ export default {
       localLiked: false,
       localRead: false,
     };
+  },
+  watch: {
+    isLiked(newLiked) {
+      this.localLiked = newLiked;
+    },
+    isRead(newRead) {
+      this.localRead = newRead;
+    },
   },
 };
 </script>

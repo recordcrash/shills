@@ -2,73 +2,32 @@
   <div class="shills-list">
     <v-row class="filters pa-2">
       <v-col>
-        <v-autocomplete
-          v-model="includedTags"
-          :items="allTags"
-          outlined
-          dense
-          chips
-          hide-details
-          small-chips
-          deletable-chips
-          label="Show only"
-          multiple
-        ></v-autocomplete>
+        <v-autocomplete label="Show only"
+          v-model="includedTags" :items="allTags"
+          outlined dense chips hide-details small-chips deletable-chips multiple/>
       </v-col>
       <v-col>
-        <v-autocomplete
-          v-model="excludedTags"
-          :items="allTags"
-          outlined
-          dense
-          hide-details
-          chips
-          small-chips
-          deletable-chips
-          label="Exclude"
-          multiple
-        ></v-autocomplete>
+        <v-autocomplete label="Exclude"
+          v-model="excludedTags" :items="allTags"
+          outlined dense hide-details chips small-chips deletable-chips multiple/>
       </v-col>
       <v-col>
-         <v-select
-          v-model="sortedBy"
-          :items="sortings"
-          label="Sort by"
-          outlined
-          hide-details
-          dense
-        ></v-select>
+         <v-select label="Sort by"
+          v-model="sortedBy" :items="sortings"
+          outlined hide-details dense/>
       </v-col>
       <v-col>
-         <v-select
-          v-model="show"
-          :items="showings"
-          label="Completion status"
-          outlined
-          hide-details
-          dense
-        ></v-select>
+         <v-select label="Completion status"
+          v-model="show" :items="showings"
+          outlined hide-details dense/>
       </v-col>
     </v-row>
     <div class="shills">
     <v-layout row wrap justify-center class="pb-3">
-      <shill-card v-for="shill in shownShills" v-bind:key="shill.id" class="ma-2" :isAuthenticated="isAuthenticated"
-      :maxWidth="375"
-      :id="shill.id"
-      :likes="shill.likes" :reads="shill.readers"
-      :name="shill.name"
-      :shortName="shill.shortname"
-      :author="shill.author"
-      :description="shill.description"
-      :link="shill.link"
-      :linkText="shill.linktext"
-      :hours="shill.hours"
-      :amount="shill.amount"
-      :images="shill.image"
-      :tags="shill.tags"
-      :props="JSON.parse(shill.props)"
-      :read="isRead(shill.id)"
-      :liked="isLiked(shill.id)"
+      <shill-card v-for="shill in shownShills" v-bind:key="shill.id" :isAuthenticated="isAuthenticated" :maxWidth="375" class="ma-2"
+      :work="shill"
+      :reads="reads"
+      :likes="likes"
       @tag="onTag"/>
     </v-layout>
     </div>
@@ -78,6 +37,7 @@
 <script>
 import ShillCard from '../components/ShillCard.vue';
 import api from '../auth/api';
+import Shill from '../models/shill';
 
 export default {
   name: 'ShillsList',
@@ -109,8 +69,8 @@ export default {
     },
     filteredShills() {
       return this.sortedShillsList.filter(
-        (shill) => this.includedTags.every((selTag) => shill.tags.split(',').includes(selTag))
-          && !this.excludedTags.some((selTag) => shill.tags.split(',').includes(selTag)),
+        (shill) => this.includedTags.every((selTag) => shill.tags.includes(selTag))
+          && !this.excludedTags.some((selTag) => shill.tags.includes(selTag)),
       );
     },
     shownShills() {
@@ -126,17 +86,11 @@ export default {
     allTags() {
       const allTags = new Set();
       if (this.shills === []) return [];
-      this.shills.forEach((shill) => shill.tags.split(',').forEach((tag) => allTags.add(tag)));
+      this.shills.forEach((shill) => shill.tags.forEach((tag) => allTags.add(tag)));
       return Array.from(allTags);
     },
   },
   methods: {
-    isRead(id) {
-      return !!this.reads.find((el) => el.readername === this.$auth?.user?.name && el.work === id);
-    },
-    isLiked(id) {
-      return !!this.likes.find((el) => el.readername === this.$auth?.user?.name && el.work === id);
-    },
     onTag(tag) {
       this.includedTags = [tag];
     },
@@ -161,21 +115,18 @@ export default {
     },
   },
   async created() {
+    // Load list of works and set up filters
+    const works = await api.requestShillsList({ auth: this.$auth, type: this.type });
+    this.shills = Shill.toInstanceList(works);
+    this.processRoute();
+
+    // Load reads and likes for heart/flag management
     const promises = await Promise.all([
-      await api.requestShillsList({ auth: this.$auth, type: this.type }),
-      await api.requestReaders({ auth: this.$auth }),
       await api.requestAllWorksRead(),
       await api.requestAllWorksLiked(),
     ]);
-    const works = promises[0];
-    const readers = promises[1];
-    const reads = promises[2];
-    const likes = promises[3];
-    this.readers = readers;
-    this.shills = works;
-    this.reads = reads;
-    this.likes = likes;
-    this.processRoute();
+    [this.reads, this.likes] = promises;
+    this.readers = await api.requestReaders({ auth: this.$auth });
   },
   data() {
     return {

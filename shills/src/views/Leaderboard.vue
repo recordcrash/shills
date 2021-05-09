@@ -47,24 +47,19 @@ export default {
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
       await api.requestAllWorksRead(),
     ]);
-    const works = promises[0];
-    const reads = promises[1];
+    const [works, reads] = promises;
     const elements = this.getElementsByReadsArray(works, reads);
 
-    const headers = [{
-      text: 'Shill Reader',
-      align: 'start',
-      sortable: false,
-      value: 'name',
-    },
-    {
-      text: 'Shills finished',
-      value: 'count',
-    },
-    {
-      text: 'Hours spent',
-      value: 'hours',
-    }];
+    const headers = [
+      {
+        text: 'Shill Reader', align: 'start', sortable: false, value: 'name',
+      },
+      {
+        text: 'Shills finished', value: 'count',
+      },
+      {
+        text: 'Hours spent', value: 'hours',
+      }];
     works.forEach((work) => {
       headers.push({
         text: work.shortname,
