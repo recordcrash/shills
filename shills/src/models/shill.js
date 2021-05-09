@@ -7,7 +7,7 @@ export default class Shill {
     this.amount = props.amount;
     this.hours = props.hours;
     this.link = props.link;
-    this.linktext = props.linktext;
+    this.linkText = props.linktext;
     this.image = props.image.split(',');
     this.likes = props.likes;
     this.readers = props.readers;

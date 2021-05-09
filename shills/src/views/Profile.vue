@@ -111,7 +111,7 @@ export default {
     },
   },
   async mounted() {
-    this.username = this.$route.params.username.replace(/\+/g, ' ') || this.$auth.user.name;
+    this.username = this.$route.params.username ? this.$route.params.username.replace(/\+/g, ' ') : this.$auth.user.name || 'Makin';
     document.title = this.username ? `${this.username} - The Shills List` : 'User Profile - The Shills List';
     const promises = await Promise.all([
       await api.requestShillsList(),
