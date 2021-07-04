@@ -79,7 +79,7 @@ export default {
       return [];
     },
     topReader() {
-      return [...this.readArray].sort((a, b) => b.value - a.value)[1];
+      return [...this.readArray].sort((a, b) => b.value - a.value)[0];
     },
     topShamed() {
       return [...this.readArray].filter((el) => el.hours > 30).sort((a, b) => a.hours / a.value - b.hours / b.value)[0];

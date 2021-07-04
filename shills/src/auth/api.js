@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const BASE_URL = 'https://api.recordcrash.com:3141';
+
 const api = {
   async requestToken(auth) {
     const token = await auth.getTokenSilently();
@@ -12,49 +14,49 @@ const api = {
   },
 
   async requestShillsList() {
-    const { data } = await axios.get('https://recordcrash.com:3141/works');
+    const { data } = await axios.get(`${BASE_URL}/works`);
     return data;
   },
 
   async requestReaders() {
-    const { data } = await axios.get('https://recordcrash.com:3141/readers');
+    const { data } = await axios.get(`${BASE_URL}/readers`);
     return data;
   },
   async requestProgress() {
-    const { data } = await axios.get('https://recordcrash.com:3141/progress');
+    const { data } = await axios.get(`${BASE_URL}/progress`);
     return data;
   },
 
   async requestAllWorksRead() {
-    const { data } = await axios.get('https://recordcrash.com:3141/works/worksread/1');
+    const { data } = await axios.get(`${BASE_URL}/works/worksread/1`);
     return data;
   },
   async requestAllWorksLiked() {
-    const { data } = await axios.get('https://recordcrash.com:3141/works/worksliked/1');
+    const { data } = await axios.get(`${BASE_URL}/works/worksliked/1`);
     return data;
   },
   async requestAllReviews() {
-    const { data } = await axios.get('https://recordcrash.com:3141/reviews/');
+    const { data } = await axios.get(`${BASE_URL}/reviews/`);
     return data;
   },
   async requestReviewsForWork(id) {
-    const { data } = await axios.get(`https://recordcrash.com:3141/reviews/${id}`);
+    const { data } = await axios.get(`${BASE_URL}/reviews/${id}`);
     return data;
   },
   async requestReviewsByReader(username) {
-    const { data } = await axios.get(`https://recordcrash.com:3141/reviews/reader/${username}`);
+    const { data } = await axios.get(`${BASE_URL}/reviews/reader/${username}`);
     return data;
   },
   async reviewWork(reviewObject) {
-    const { data } = await axios.post(`https://recordcrash.com:3141/reviews/review/${reviewObject.workid}`, reviewObject);
+    const { data } = await axios.post(`${BASE_URL}/reviews/review/${reviewObject.workid}`, reviewObject);
     return data;
   },
   async likeWork(id, readername) {
-    const { data } = await axios.post(`https://recordcrash.com:3141/works/like/${id}/${readername}`);
+    const { data } = await axios.post(`${BASE_URL}/works/like/${id}/${readername}`);
     return data;
   },
   async readWork(id, readername) {
-    const { data } = await axios.post(`https://recordcrash.com:3141/works/read/${id}/${readername}`);
+    const { data } = await axios.post(`${BASE_URL}/works/read/${id}/${readername}`);
     return data;
   },
 };
