@@ -108,6 +108,10 @@ export default {
             break;
           case 'custom':
             this.includedTags = ['Custom'];
+            this.excludedTags = ['Drewshills'];
+            break;
+          case 'drewshills':
+            this.includedTags = ['Drewshills'];
             this.excludedTags = [];
             break;
           default:
