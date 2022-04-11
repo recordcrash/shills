@@ -54,6 +54,8 @@ export default {
     sortedShillsList() {
       if (this.shills === []) return [];
       switch (this.sortedBy) {
+        case 'Best':
+          return [...this.shills].sort((a, b) => b.likes / b.readers - a.likes / a.readers);
         case 'Likes':
           return [...this.shills].sort((a, b) => b.likes - a.likes);
         case 'Readers':
@@ -144,7 +146,7 @@ export default {
       showUnread: false,
       includedTags: ['Main'],
       excludedTags: ['Flawed', 'Custom'],
-      sortings: ['Recommended', 'Likes', 'Readers', 'Alphabetical', 'Time investment'],
+      sortings: ['Recommended', 'Best', 'Likes', 'Readers', 'Alphabetical', 'Time investment'],
       sortedBy: 'Recommended',
       show: 'All',
       showings: ['All', 'Uncompleted', 'Completed'],

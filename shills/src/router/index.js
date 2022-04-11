@@ -4,7 +4,7 @@ import ShillsList from '../views/ShillsList.vue';
 import Profile from '../views/Profile.vue';
 import Leaderboard from '../views/Leaderboard.vue';
 import About from '../views/About.vue';
-import Stats from '../views/Stats.vue';
+import Home from '../views/Home.vue';
 import ShillView from '../views/ShillView.vue';
 // import { authGuard } from '../auth/authGuard';
 
@@ -139,8 +139,8 @@ const routes = [
   },
   {
     path: '/',
-    name: 'stats',
-    component: Stats,
+    name: 'home',
+    component: Home,
     meta: {
       title: 'The Shills List',
       metaTags: [
@@ -155,11 +155,11 @@ const routes = [
       ],
     },
   },
-  /** {
-    path: '/oldlist',
+  {
+    path: '/blog',
     // eslint-disable-next-line no-restricted-globals
-    beforeEnter() { window.open('https://recordcrash.com/shills.html'); },
-  }, */
+    beforeEnter() { window.open('https://recordcrash.substack.com/'); },
+  },
 ];
 
 const router = new VueRouter({

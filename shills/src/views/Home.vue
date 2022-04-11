@@ -4,6 +4,21 @@
     <div class="d-flex flex-row flex-wrap justify-center ma-6">
       <div class="justify-center">
         <v-row justify="center">
+          <v-col class="latestTweets">
+            <v-card-title class="pb-0">LATEST TWEETS</v-card-title>
+            <div class="tweetList" v-if="tweets">
+              <div v-for="(tweet, index) in tweets" :key="index">
+                <div class="tweet">
+                  <v-card-text class="py-0 font-weight-bold"><span class="tweetText"><a href="https://twitter.com/RecordCrash">@RecordCrash</a>: {{tweet.text}}</span></v-card-text>
+                  <div class="storyContainer">
+                    <v-card-text v-if="tweet.storyTitle" class="pb-0"><a :href="tweet.url ? tweet.url : null">{{tweet.storyTitle}}</a></v-card-text>
+                    <v-card-subtitle v-if="tweet.storyText" class="pt-0 font-italic">{{tweet.storyText}}</v-card-subtitle>
+                  </div>
+                  <v-divider></v-divider>
+                </div>
+              </div>
+            </div>
+          </v-col>
           <v-col v-if="latestCompletions" class="latestCompletions">
             <v-card-title>RECENT ACTIVITY</v-card-title>
             <div v-if="latestCompletions">
@@ -55,7 +70,7 @@ import api from '../auth/api';
 import ShillStat from '../components/ShillStat.vue';
 
 export default {
-  name: 'Stats',
+  name: 'Home',
   components: {
     ShillStat,
   },
@@ -63,6 +78,7 @@ export default {
     return {
       data: null,
       works: [],
+      tweets: [],
       reads: [],
       rawReads: [],
       reviews: [],
@@ -185,9 +201,11 @@ export default {
     const promises = await Promise.all([
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
       await api.requestAllWorksRead(),
+      await api.requestTweets(),
     ]);
-    const [works, reads] = promises;
+    const [works, reads, tweets] = promises;
     this.works = works;
+    this.tweets = tweets;
     this.reads = this.prepareReadsArray(reads);
     this.rawReads = reads;
     this.reviews = await api.requestAllReviews();
@@ -245,5 +263,21 @@ a {text-decoration: none; }
 .latestReviews {
   max-width: 800px;
   min-width: 300px;
+}
+.tweet {
+  margin-top: 10px;
+}
+.latestTweets{
+  max-width: 800px;
+  min-width: 400px;
+}
+.tweetList {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+.storyContainer{
+  border-radius: 25px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  margin: 20px;
 }
 </style>

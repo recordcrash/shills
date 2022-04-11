@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://api.recordcrash.com:3141';
+const BASE_URL = 'https://homestuck.net/api';
 
 const api = {
   async requestToken(auth) {
@@ -15,6 +15,11 @@ const api = {
 
   async requestShillsList() {
     const { data } = await axios.get(`${BASE_URL}/works`);
+    return data;
+  },
+
+  async requestTweets() {
+    const { data } = await axios.get(`${BASE_URL}/twitter`);
     return data;
   },
 

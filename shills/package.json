@@ -20,8 +20,9 @@
     "jwks-rsa": "^2.0.2",
     "npm-run-all": "^4.1.5",
     "vue": "^2.6.11",
-    "vue-cool-lightbox": "^2.7.2",
     "vue-class-component": "^7.2.6",
+    "vue-cool-lightbox": "^2.7.2",
+    "vue-meta": "^2.4.0",
     "vue-router": "^3.5.1",
     "vue-trend-chart": "^0.15.3",
     "vuetify": "^2.4.0"

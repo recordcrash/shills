@@ -72,13 +72,14 @@ export default {
   data: () => ({
     drawer: null,
     items: [
+      { icon: 'mdi-chart-bar', text: 'Home', to: '/' },
       { icon: 'mdi-library', text: 'Main Shills', to: '/list/main' },
       { icon: 'mdi-book', text: 'More Shills', to: '/list/all' },
       { icon: 'mdi-weather-lightning', text: 'Flawed Shills', to: '/list/flawed' },
       { icon: 'mdi-trophy-award', text: 'Custom Shills', to: '/list/custom' },
       { icon: 'mdi-baguette', text: 'Drew\'s Shills', to: '/list/drewshills' },
       { icon: 'mdi-trending-up', text: 'Leaderboard', to: '/leaderboard' },
-      { icon: 'mdi-chart-bar', text: 'Home', to: '/' },
+      { icon: 'mdi-fountain-pen-tip', text: 'Blog', to: '/blog' },
       { icon: 'mdi-comment-question', text: 'About', to: '/about' },
     ],
   }),
