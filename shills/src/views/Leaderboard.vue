@@ -103,10 +103,10 @@ export default {
       const tvMedal = { name: 'Video Medal', link: 'https://recordcrash.com/images/tv.png', description: 'A medal granted to those who finish all the video shills' };
       const bookMedal = { name: 'Book Medal', link: 'https://recordcrash.com/images/book.png', description: 'A medal granted to those who finish the additional shills' };
       const huskyMedal = { name: 'Husky Medal', link: 'https://recordcrash.com/images/husky.png', description: 'A medal granted to those who read one shill of every list, even custom' };
-      const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+      const goldMedalArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 61];
       const gameMedalArray = [30, 31, 32];
       const tvMedalArray = [33, 34];
-      const bookMedalArray = [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36];
+      const bookMedalArray = [24, 25, 26, 27, 28, 29, 35, 36];
       const localReads = this.reads.filter((read) => read.readername === reader.name).map((el) => el.work);
       const readWorks = this.works.filter((work) => localReads.includes(work.id));
       if (goldMedalArray.every((el) => localReads.includes(el))) medals.push(goldMedal);
