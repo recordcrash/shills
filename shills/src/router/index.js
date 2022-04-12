@@ -5,6 +5,7 @@ import Profile from '../views/Profile.vue';
 import Leaderboard from '../views/Leaderboard.vue';
 import About from '../views/About.vue';
 import Home from '../views/Home.vue';
+import Stats from '../views/Stats.vue';
 import ShillView from '../views/ShillView.vue';
 // import { authGuard } from '../auth/authGuard';
 
@@ -151,6 +152,24 @@ const routes = [
         {
           property: 'og:description',
           content: 'A list of multimedia works that any internet user will enjoy, from Worm to Kid Radd.',
+        },
+      ],
+    },
+  },
+  {
+    path: '/stats',
+    name: 'stats',
+    component: Stats,
+    meta: {
+      title: 'Stats - The Shills List',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Stats regarding the Shills list and the people who read them.',
+        },
+        {
+          property: 'og:description',
+          content: 'Stats regarding the Shills list and the people who read them.',
         },
       ],
     },
