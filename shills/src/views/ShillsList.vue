@@ -38,6 +38,7 @@
 import ShillCard from '../components/ShillCard.vue';
 import api from '../auth/api';
 import Shill from '../models/shill';
+import WilsonScore from '../helpers/wilsonScore';
 
 export default {
   name: 'ShillsList',
@@ -55,7 +56,7 @@ export default {
       if (this.shills === []) return [];
       switch (this.sortedBy) {
         case 'Best':
-          return [...this.shills].sort((a, b) => b.likes / b.readers - a.likes / a.readers);
+          return [...this.shills].sort((a, b) => WilsonScore.lowerBound(b.likes, b.readers) - WilsonScore.lowerBound(a.likes, a.readers));
         case 'Likes':
           return [...this.shills].sort((a, b) => b.likes - a.likes);
         case 'Readers':
@@ -136,6 +137,7 @@ export default {
     ]);
     [this.reads, this.likes] = promises;
     this.readers = await api.requestReaders({ auth: this.$auth });
+    this.shills.forEach((el) => { console.log(WilsonScore.lowerBound(el.readerss, el.likes)); });
   },
   data() {
     return {
