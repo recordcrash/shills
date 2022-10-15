@@ -9,9 +9,9 @@
             <div class="tweetList" v-if="tweets">
               <div v-for="(tweet, index) in tweets" :key="index">
                 <div class="tweet">
-                  <v-card-text class="py-0"><span class="tweetText"><a href="https://twitter.com/RecordCrash">@RecordCrash</a>: {{tweet.text}}</span></v-card-text>
+                  <v-card-text class="py-0"><span class="tweetText"><a href="https://twitter.com/RecordCrash" target="_blank">@RecordCrash</a>: {{tweet.text}}</span></v-card-text>
                   <div class="storyContainer" v-if="tweet.url">
-                    <v-card-text v-if="tweet.storyTitle" class="pb-0"><a :href="tweet.url ? tweet.url : null">{{tweet.storyTitle}}</a></v-card-text>
+                    <v-card-text v-if="tweet.storyTitle" class="pb-0"><a :href="tweet.url ? tweet.url : null" target="_blank">{{tweet.storyTitle}}</a></v-card-text>
                     <v-card-subtitle v-if="tweet.storyText" class="pt-0 font-italic">{{tweet.storyText}}</v-card-subtitle>
                   </div>
                   <v-divider></v-divider>

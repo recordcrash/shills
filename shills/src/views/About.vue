@@ -11,8 +11,8 @@
             <li>Such a <span class="glitch" data-text="successor">successor</span> can further expand their influence by reading every non-custom shill, earning themselves their own list on the sidebar.</li>
               </ul>
           <p><h3>More information</h3>
-          <p>The Shills List is open source, and available at <a href="https://github.com/recordcrash/shills/">Github</a>. Pull requests are encouraged.</p>
-          <p>For more information, feedback, or custom shill requests, join the <a href="https://discord.gg/aknu95AZWZ">Shills List discord channel</a>.</p>
+          <p>The Shills List is open source, and available at <a href="https://github.com/recordcrash/shills/" target="_blank">Github</a>. Pull requests are encouraged.</p>
+          <p>For more information, feedback, or custom shill requests, join the <a href="https://discord.gg/aknu95AZWZ" target="_blank">Shills List discord channel</a>.</p>
         </v-card-text>
     </v-card>
   </div>

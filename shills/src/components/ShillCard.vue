@@ -58,7 +58,7 @@
             <span>{{work.amount}}</span>
           </v-tooltip>
           <v-spacer/>
-          <a :href="work.link">{{work.linkText}}</a>
+          <a :href="work.link" target="_blank">{{work.linkText}}</a>
         </v-row>
       </v-list-item>
       </v-container>

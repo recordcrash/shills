@@ -4,7 +4,7 @@
   <v-card elevation="24" style="display: flex; flex-direction: column;">
     <v-card-title lights-out style="text-shadow: 0 0 2px #000, 0 0 3px #000, 0 0 4px #000;">{{work.name}}</v-card-title>
     <v-card-subtitle style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">Author: {{work.author}}</v-card-subtitle>
-    <v-card-text style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">Available at: <a :href="work.link">{{work.link}}</a></v-card-text>
+    <v-card-text style="color: #fff; text-shadow: 0 0 1px #000, 0 0 2px #000">Available at: <a :href="work.link" target="_blank">{{work.link}}</a></v-card-text>
     <v-card-text class="py-0">
       <div> Click flag to mark as read:
       <v-icon class="mr-1" v-if="!isAuthenticated" @click="onRead(work.id)"> mdi-flag-outline </v-icon>
