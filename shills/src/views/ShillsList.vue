@@ -111,10 +111,14 @@ export default {
             break;
           case 'custom':
             this.includedTags = ['Custom'];
-            this.excludedTags = ['Drewshills'];
+            this.excludedTags = ['Drewshills', 'Kidpenshills'];
             break;
           case 'drewshills':
             this.includedTags = ['Drewshills'];
+            this.excludedTags = [];
+            break;
+          case 'kidpenshills':
+            this.includedTags = ['Kidpenshills'];
             this.excludedTags = [];
             break;
           default:

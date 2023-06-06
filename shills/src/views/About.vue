@@ -8,7 +8,8 @@
           <p><h3>Custom Shill Conditions</h3>
           <ul>
             <li>Whomsoever finishes all the Main Shills and passes a test of knowledge shall get their own shill added to the Custom Shills.</li>
-            <li>Such a <span class="glitch" data-text="successor">successor</span> can further expand their influence by reading every non-custom shill, earning themselves their own list on the sidebar.</li>
+            <li>Such a <span class="glitch" data-text="successor">successor</span> can further expand their influence by reading every non-custom shill, earning themselves their own list on the sidebar.</li> 
+            <li>As of the writing of this, Drew Linky and Kidpen have become successors, while seven people have managed to submit a custom shill.</li>
               </ul>
           <p><h3>More information</h3>
           <p>The Shills List is open source, and available at <a href="https://github.com/recordcrash/shills/" target="_blank">Github</a>. Pull requests are encouraged.</p>

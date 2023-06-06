@@ -1,20 +1,42 @@
 export default class Shill {
   constructor(props) {
-    this.id = props.id;
-    this.name = props.name;
-    this.description = props.description;
-    this.author = props.author;
-    this.amount = props.amount;
-    this.hours = props.hours;
-    this.link = props.link;
-    this.linkText = props.linktext;
-    this.image = props.image.split(',');
-    this.likes = props.likes;
-    this.readers = props.readers;
-    this.shortname = props.shortname;
-    this.tags = props.tags.split(',');
-    this.props = JSON.parse(props.props);
+    this.id = props.id || 0;
+    this.name = props.name || 'Shill';
+    this.description = props.description || '';
+    this.author = props.author || '';
+    this.amount = props.amount || 0;
+    this.hours = props.hours || 0;
+    this.link = props.link || '';
+    this.linkText = props.linktext || '';
+    this.image = Shill.getImage(props);
+    this.likes = props.likes || 0;
+    this.readers = props.readers || 0;
+    this.shortname = props.shortname || 'S';
+    this.tags = Shill.getTags(props);
+    try {
+      this.props = JSON.parse(props.props);
+    } catch (e) {
+      this.props = {};
+    }
     this.artList = this.props.art ? this.props.art : [];
+  }
+
+  static getImage(props) {
+    // image can come as a comma separate list of images, or not contain commas, check if a comma exists
+    if (!props.image) return [];
+    if (props.image.includes(',')) {
+      return props.image.split(',');
+    } else {
+      return [props.image];
+    }
+  }
+
+  static getTags(props) {
+    if (!props.tags) return [];
+    if (props.tags.includes(',')) {
+      return props.tags.split(',');
+    }
+    return [props.tags];
   }
 
   static toInstanceList(shillList) {

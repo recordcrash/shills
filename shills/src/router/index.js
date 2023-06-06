@@ -7,7 +7,6 @@ import About from '../views/About.vue';
 import Home from '../views/Home.vue';
 import Stats from '../views/Stats.vue';
 import ShillView from '../views/ShillView.vue';
-// import { authGuard } from '../auth/authGuard';
 
 Vue.use(VueRouter);
 
@@ -52,37 +51,11 @@ const routes = [
     path: '/shill/:id',
     name: 'ShillView',
     component: ShillView,
-    meta: {
-      title: 'Work Page - The Shills List',
-      metaTags: [
-        {
-          name: 'description',
-          content: 'One of the works in the Shills List, the list of multimedia works that any internet user will enjoy.',
-        },
-        {
-          property: 'og:description',
-          content: 'One of the works in the Shills List, the list of multimedia works that any internet user will enjoy.',
-        },
-      ],
-    },
   },
   {
     path: '/shill/:id/:name',
     name: 'ShillViewNamed',
     component: ShillView,
-    meta: {
-      title: 'Work Page - The Shills List',
-      metaTags: [
-        {
-          name: 'description',
-          content: 'One of the works in the Shills List, the list of multimedia works that any internet user will enjoy.',
-        },
-        {
-          property: 'og:description',
-          content: 'One of the works in the Shills List, the list of multimedia works that any internet user will enjoy.',
-        },
-      ],
-    },
   },
   {
     path: '/leaderboard',

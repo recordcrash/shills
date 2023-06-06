@@ -11,10 +11,10 @@ export default new Vuetify({
     dark: true,
     themes: {
       dark: {
-        primary: '#EE7C40',
-        secondary: '#2D1324',
-        accent: '#EE7C40',
-        error: '#801313',
+        primary: '#1E90FF',
+        secondary: '#17202A',
+        accent: '#1E90FF',
+        error: '#B22222',
       },
     },
   },

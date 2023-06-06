@@ -78,6 +78,7 @@ export default {
       { icon: 'mdi-weather-lightning', text: 'Flawed Shills', to: '/list/flawed' },
       { icon: 'mdi-trophy-award', text: 'Custom Shills', to: '/list/custom' },
       { icon: 'mdi-baguette', text: 'Drew\'s Shills', to: '/list/drewshills' },
+      { icon: 'mdi-mustache', text: 'Kidpen\'s Shills', to: '/list/kidpenshills' },
       { icon: 'mdi-medal-outline', text: 'Leaderboard', to: '/leaderboard' },
       { icon: 'mdi-trending-up', text: 'Stats', to: '/stats' },
       { icon: 'mdi-fountain-pen-tip', text: 'Blog', to: '/blog' },

@@ -3,7 +3,7 @@
     <v-data-table
     :headers="headers"
     :items="sortedElements"
-    :items-per-page="99"
+    :items-per-page="200"
     hide-default-footer
     fixed-header
     dense
@@ -20,6 +20,7 @@
   <template v-slot:[`item.count`]="{ item }">
       <v-chip
         :color="getColor(item.count)"
+        :class="item.count > maxShills ? 'rainbow' : ''"
         dark
       >
         {{ item.count }}
@@ -122,16 +123,14 @@ export default {
       ) medals.push(huskyMedal);
       return medals;
     },
-    getColor(number) {
-      return this.makeColor(number * (number / 518));
-    },
     getTrueNameString(string) {
       const length = 15;
       return string.length > length ? `${string.substring(0, length)}…` : string;
     },
-    makeColor(value) {
-      // value must be between [0, 510]
-      value = Math.min(Math.max(0, value), 1) * 510;
+    getColor(number) {
+      if (number > this.maxShills) return '#000000';
+      let value = number / this.maxShills;
+      value = Math.min(Math.max(0, value), 1) * 520; // 510 is a magic number that determines the gradient
 
       let redValue;
       let greenValue;
@@ -160,6 +159,7 @@ export default {
       headers: [],
       reads: [],
       elements: [],
+      maxShills: 46, // all shills minus custom
     };
   },
 };
@@ -183,5 +183,31 @@ export default {
   .medal {
     margin-left: 4px;
     vertical-align: middle;
+  }
+  .rainbow {
+    animation: rainbow 0.25s infinite;
+  }
+  @keyframes rainbow {
+    0% {
+      background-color: #ff0000;
+    }
+    16% {
+      background-color: #ff7f00;
+    }
+    33% {
+      background-color: #ffff00;
+    }
+    50% {
+      background-color: #00ff00;
+    }
+    66% {
+      background-color: #0000ff;
+    }
+    83% {
+      background-color: #4b0082;
+    }
+    100% {
+      background-color: #9400d3;
+    }
   }
 </style>

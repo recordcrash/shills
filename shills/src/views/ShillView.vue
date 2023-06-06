@@ -103,6 +103,30 @@ import Shill from '../models/shill';
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
 export default {
+  metaInfo() {
+    const work = this.work ? new Shill(this.work) : new Shill({});
+    const workName = this.$route.params.name ? `${this.$route.params.name.replace(/\+/g, ' ')}` : 'Work page';
+    return {
+      title: `${workName} - The Shills List`,
+      meta: [
+        // Standard Metadata
+        { vmid: 'description', name: 'description', content: work.description },
+        // Open Graph Metadata
+        { vmid: 'og:title', property: 'og:title', content: `${workName} - The Shills List` },
+        { vmid: 'og:description', property: 'og:description', content: work.description },
+        { vmid: 'og:image', property: 'og:image', content: work.image[0] },
+        { vmid: 'og:url', property: 'og:url', content: window.location.href },
+        { vmid: 'og:type', property: 'og:type', content: 'website' },
+        { vmid: 'og:site_name', property: 'og:site_name', content: 'The Shills List' },
+        // Twitter Metadata
+        { vmid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
+        { vmid: 'twitter:title', name: 'twitter:title', content: `${workName} - The Shills List` },
+        { vmid: 'twitter:description', name: 'twitter:description', content: work.description },
+        { vmid: 'twitter:image', name: 'twitter:image', content: work.image[0] },
+        { vmid: 'twitter:site', name: 'twitter:site', content: '@recordcrash' },
+      ]
+    };
+  },
   name: 'ShillView',
   components: { CoolLightBox },
   methods: {
@@ -205,7 +229,6 @@ export default {
     },
   },
   async mounted() {
-    document.title = this.$route.params.name ? `${this.$route.params.name.replace(/\+/g, ' ')} - The Shills List` : 'Work page - The Shills List';
     // Check shill exists before doing anything, else return to home page
     const shillId = Number.parseInt(this.$route.params.id, 10) || 1;
     const works = await api.requestShillsList();
@@ -213,6 +236,11 @@ export default {
     if (!foundShill) this.$router.push('/');
     this.work = new Shill(foundShill);
     this.works = works;
+
+    // Handle metadata
+    // Set the document title
+    const workName = this.$route.params.name ? `${this.$route.params.name.replace(/\+/g, ' ')}` : 'Work page';
+    document.title = `${workName} - The Shills List`;
 
     // Handle read/liked status
     this.username = this.$auth.user ? this.$auth.user.name : null;
@@ -229,6 +257,9 @@ export default {
     // Handle reviews
     this.reviews = await api.requestReviewsForWork(shillId);
     this.handleReviewDefault();
+
+    // Set meta info
+    this.$meta().refresh();
   },
   data() {
     return {

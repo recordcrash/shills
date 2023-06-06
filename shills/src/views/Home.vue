@@ -1,9 +1,20 @@
 <template>
   <div class="statsList">
     <div class="d-flex flex-row justify-center pt-3 pb-0"><h2>WELCOME TO <router-link to="/list/main">THE SHILLS LIST</router-link></h2></div>
+    <div class="d-flex flex-row justify-center pb-3 subtitle"><small>Click on the link above to go straight to the list itself</small></div>
     <div class="d-flex flex-row flex-wrap justify-center mx-6">
       <div class="justify-center">
         <v-row justify="center">
+          <v-col class="latestReviews">
+            <v-card-title class="pb-0">LATEST REVIEWS</v-card-title>
+            <div v-if="latestReviews">
+              <div v-for="(review, index) in latestReviews" :key="index">
+                  <v-card-title class="pb-0"><span class="review-pretext"><router-link :to="getWorkUrl(review.workid)">{{getWorkName({work: review.workid})}}</router-link></span></v-card-title>
+                  <router-link :to="getReaderUrl(review.readername)"><v-card-subtitle class="pt-0 font-italic">{{review.readername}}</v-card-subtitle></router-link>
+                  <v-card-text class="py-0"><span class="review">{{review.review}}</span></v-card-text>
+              </div>
+            </div>
+          </v-col>
           <v-col class="latestTweets">
             <v-card-title class="pb-0">LATEST TWEETS</v-card-title>
             <div class="tweetList" v-if="tweets">
@@ -16,16 +27,6 @@
                   </div>
                   <v-divider></v-divider>
                 </div>
-              </div>
-            </div>
-          </v-col>
-          <v-col class="latestReviews">
-            <v-card-title class="pb-0">LATEST REVIEWS</v-card-title>
-            <div v-if="latestReviews">
-              <div v-for="(review, index) in latestReviews" :key="index">
-                  <v-card-title class="pb-0"><span class="review-pretext"><router-link :to="getWorkUrl(review.workid)">{{getWorkName({work: review.workid})}}</router-link></span></v-card-title>
-                  <router-link :to="getReaderUrl(review.readername)"><v-card-subtitle class="pt-0 font-italic">{{review.readername}}</v-card-subtitle></router-link>
-                  <v-card-text class="py-0"><span class="review">{{review.review}}</span></v-card-text>
               </div>
             </div>
           </v-col>
@@ -89,7 +90,7 @@ export default {
         }
         lastReaderName = readerName;
       });
-      return latestCompletions.slice(0, 14);
+      return latestCompletions.slice(0, 30);
     },
     readArray() {
       const readArray = [];
