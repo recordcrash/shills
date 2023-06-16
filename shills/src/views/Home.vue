@@ -15,6 +15,7 @@
               </div>
             </div>
           </v-col>
+          <!-- Sadly removed since mid 2023 due to Twitter API changes
           <v-col class="latestTweets">
             <v-card-title class="pb-0">LATEST TWEETS</v-card-title>
             <div class="tweetList" v-if="tweets">
@@ -29,7 +30,7 @@
                 </div>
               </div>
             </div>
-          </v-col>
+          </v-col> -->
           <v-col v-if="latestCompletions" class="latestCompletions">
             <v-card-title class="pb-0">LATEST ACTIVITY</v-card-title>
             <div v-if="latestCompletions">
@@ -58,7 +59,7 @@ export default {
     return {
       data: null,
       works: [],
-      tweets: [],
+      // tweets: [],
       reads: [],
       rawReads: [],
       reviews: [],
@@ -166,11 +167,11 @@ export default {
     const promises = await Promise.all([
       await api.requestShillsList({ auth: this.$auth, type: this.type }),
       await api.requestAllWorksRead(),
-      await api.requestTweets(),
+      // await api.requestTweets(),
     ]);
-    const [works, reads, tweets] = promises;
+    const [works, reads/*, tweets */] = promises;
     this.works = works;
-    this.tweets = tweets;
+    // this.tweets = tweets;
     this.reads = this.prepareReadsArray(reads);
     this.rawReads = reads;
     this.reviews = await api.requestAllReviews();

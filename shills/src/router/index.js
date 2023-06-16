@@ -152,6 +152,11 @@ const routes = [
     // eslint-disable-next-line no-restricted-globals
     beforeEnter() { window.open('https://recordcrash.substack.com/'); },
   },
+  {
+    path: '/twitter',
+    // eslint-disable-next-line no-restricted-globals
+    beforeEnter() { window.open('https://twitter.com/recordcrash'); },
+  },
 ];
 
 const router = new VueRouter({

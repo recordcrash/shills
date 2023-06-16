@@ -82,6 +82,7 @@ export default {
       { icon: 'mdi-medal-outline', text: 'Leaderboard', to: '/leaderboard' },
       { icon: 'mdi-trending-up', text: 'Stats', to: '/stats' },
       { icon: 'mdi-fountain-pen-tip', text: 'Blog', to: '/blog' },
+      { icon: 'mdi-twitter', text: 'Twitter', to: '/twitter' },
       { icon: 'mdi-comment-question', text: 'About', to: '/about' },
     ],
   }),
